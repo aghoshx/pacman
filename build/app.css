@@ -49,6 +49,11 @@
   max-width: 400px;
   text-align: center;
 }
+.page-left,
+.overflow-mask,
+.page-right {
+  overflow: visible !important;
+}
 
 /* Header Styles */
 .leaderboard-header,
@@ -429,7 +434,6 @@ body {
 }
 .page-left .brand-logo {
   text-align: center;
-  margin-bottom: 30px;
 }
 .page-left .brand-logo .brand-logo-icon {
   font-size: 4rem;
@@ -528,28 +532,29 @@ body {
 
 .tooltip-trigger {
   cursor: pointer;
-  text-decoration: underline dotted;
 }
-
 .tooltip-content {
   visibility: hidden;
   opacity: 0;
   width: 550px;
-  background-color: #ffffff;
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
   color: #000000;
   text-align: left;
   border-radius: 6px;
-  padding: 12px;
+  border: 1px solid black;
+  padding: 8px;
   position: absolute;
   top: 50%;
   left: 100%;
   transform: translateY(-50%);
   margin-left: 10px;
-  z-index: 1000;
+  z-index: 9999;
   transition: opacity 0.3s ease;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
 }
-
+.tooltip-content p {
+  margin-bottom: 0;
+}
 .tooltip-trigger:hover + .tooltip-content {
   visibility: visible;
   opacity: 1;
