@@ -148,6 +148,30 @@ class Leaderboard {
   }
 
   /**
+   * Calculate what position a score would get without saving it
+   * @param {number} score - The score to check
+   * @returns {Object} Position info without saving to database
+   */
+  calculatePosition(score) {
+    // Create a temporary array with the new score
+    const tempScores = [...this.scores];
+    tempScores.push({ score: score, player_name: 'TEMP' });
+    
+    // Sort by score (descending)
+    tempScores.sort((a, b) => b.score - a.score);
+    
+    // Find the position of our temporary score
+    const position = tempScores.findIndex(s => s.player_name === 'TEMP') + 1;
+    const madeLeaderboard = position <= this.maxEntries;
+    
+    return {
+      position: position,
+      madeLeaderboard: madeLeaderboard,
+      isNewRecord: this.scores.length === 0 || score > this.scores[0].score
+    };
+  }
+
+  /**
    * Clear all scores (useful for testing or reset functionality)
    */
   clearScores() {
