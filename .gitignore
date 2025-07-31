@@ -1,2 +1,7 @@
 /node_modules
 /.nyc_output
+
+# API credentials and sensitive files
+api/credentials.json
+api/.env
+*.log
