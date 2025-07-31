@@ -337,25 +337,19 @@ class PageRightLeaderboardUI {
       return;
     }
 
-    // Temporarily add the score to see what position it would get
-    const tempResult = this.leaderboard.addScore(score, "TEMP_PLAYER", level);
-
-    // Remove the temporary entry
-    this.leaderboard.scores = this.leaderboard.scores.filter(
-      (entry) => entry.name !== "TEMP_PLAYER"
-    );
-    this.leaderboard.saveScores();
+    // Calculate position without saving to database
+    const positionInfo = this.leaderboard.calculatePosition(score);
 
     document.getElementById("final-score").textContent =
       this.leaderboard.formatScore(score);
     document.getElementById("final-level").textContent = level;
 
     const positionElement = document.getElementById("leaderboard-position");
-    if (tempResult.madeLeaderboard) {
-      if (tempResult.isNewRecord) {
+    if (positionInfo.madeLeaderboard) {
+      if (positionInfo.isNewRecord) {
         positionElement.textContent = "🥇 NEW RECORD!";
       } else {
-        positionElement.textContent = `New #${tempResult.position} high score!`;
+        positionElement.textContent = `New #${positionInfo.position} high score!`;
       }
       positionElement.style.display = "block";
     } else {
