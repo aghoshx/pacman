@@ -206,7 +206,7 @@ class LeaderboardUI {
           (score, index) => `
         <div class="panel-score-entry ${index === 0 ? 'first-place' : ''}">
           <span class="rank">${index + 1}</span>
-          <span class="name">${this.escapeHtml(score.name)}</span>
+          <span class="name">${this.escapeHtml(score.player_name || score.name || 'Anonymous')}</span>
           <span class="score">${this.formatPanelScore(score.score)}</span>
         </div>
       `
@@ -274,7 +274,7 @@ class LeaderboardUI {
     document.getElementById('leaderboard-position').textContent = result.isNewRecord ? '🥇 NEW RECORD!' : `#${result.position} on the leaderboard!`;
 
     // Remove the temporary entry
-    this.leaderboard.scores = this.leaderboard.scores.filter((s) => s.name !== 'TEMP');
+    this.leaderboard.scores = this.leaderboard.scores.filter((s) => (s.player_name || s.name) !== 'TEMP');
 
     this.nameInputModal.style.display = 'flex';
     setTimeout(() => {

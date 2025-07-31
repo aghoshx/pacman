@@ -315,7 +315,7 @@ class PageRightLeaderboardUI {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-              ">${this.escapeHtml(score.name)}</div>
+              ">${this.escapeHtml(score.player_name || score.name || 'Anonymous')}</div>
               <div style="
                 text-align: right;
                 font-weight: bold;
