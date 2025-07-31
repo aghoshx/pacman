@@ -1,7 +1,10 @@
 class Leaderboard {
-  constructor(apiUrl = "https://dev.matsio.com/game-api") {
-    this.maxEntries = 10;
-    this.apiUrl = apiUrl;
+  constructor(apiUrl = null) {
+    // Use config system for settings
+    const config = window.GameConfig || { api: { baseUrl: "https://dev.matsio.com/game-api" }, leaderboard: { maxEntries: 10 } };
+    
+    this.maxEntries = config.leaderboard.maxEntries;
+    this.apiUrl = apiUrl || config.api.baseUrl;
     this.scores = [];
     
     // Load scores from database on initialization
