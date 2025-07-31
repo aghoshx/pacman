@@ -72,17 +72,44 @@ class LeaderboardAPI {
             CREATE TABLE IF NOT EXISTS leaderboard (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 player_name VARCHAR(100) NOT NULL,
+                email VARCHAR(255),
+                phone VARCHAR(20),
                 score INT NOT NULL,
                 level INT DEFAULT 1,
                 ip_address VARCHAR(45),
                 user_agent TEXT,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 INDEX idx_score (score DESC),
-                INDEX idx_created (created_at)
+                INDEX idx_created (created_at),
+                INDEX idx_email (email)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
         
         $this->pdo->exec($sql);
+        
+        // Add columns if they don't exist (for existing installations)
+        $this->addMissingColumns();
+    }
+    
+    /**
+     * Add missing columns to existing table
+     */
+    private function addMissingColumns() {
+        try {
+            // Check if email column exists
+            $stmt = $this->pdo->query("SHOW COLUMNS FROM leaderboard LIKE 'email'");
+            if ($stmt->rowCount() == 0) {
+                $this->pdo->exec("ALTER TABLE leaderboard ADD COLUMN email VARCHAR(255) AFTER player_name");
+            }
+            
+            // Check if phone column exists
+            $stmt = $this->pdo->query("SHOW COLUMNS FROM leaderboard LIKE 'phone'");
+            if ($stmt->rowCount() == 0) {
+                $this->pdo->exec("ALTER TABLE leaderboard ADD COLUMN phone VARCHAR(20) AFTER email");
+            }
+        } catch (PDOException $e) {
+            // Continue if columns already exist or other non-critical error
+        }
     }
     
     /**
@@ -193,6 +220,8 @@ class LeaderboardAPI {
         $score = (int) $input['score'];
         $level = isset($input['level']) ? (int) $input['level'] : 1;
         $playerName = isset($input['player_name']) ? trim($input['player_name']) : 'Anonymous';
+        $email = isset($input['email']) ? trim($input['email']) : null;
+        $phone = isset($input['phone']) ? trim($input['phone']) : null;
         
         // Validate score range
         if ($score < 0 || $score > $this->config['max_score']) {
@@ -207,15 +236,27 @@ class LeaderboardAPI {
         // Sanitize and validate player name
         $playerName = $this->sanitizePlayerName($playerName);
         
+        // Validate email if provided
+        if ($email && !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $this->sendError('Invalid email format', 400);
+        }
+        
+        // Validate phone if provided (basic validation)
+        if ($phone && !preg_match('/^[\+]?[0-9\-\(\)\s]{10,20}$/', $phone)) {
+            $this->sendError('Invalid phone format', 400);
+        }
+        
         try {
             // Insert score with additional metadata
             $stmt = $this->pdo->prepare("
-                INSERT INTO leaderboard (player_name, score, level, ip_address, user_agent) 
-                VALUES (?, ?, ?, ?, ?)
+                INSERT INTO leaderboard (player_name, email, phone, score, level, ip_address, user_agent) 
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
             
             $stmt->execute([
                 $playerName,
+                $email,
+                $phone,
                 $score,
                 $level,
                 $this->rateLimiter['ip'],
@@ -236,6 +277,8 @@ class LeaderboardAPI {
             $this->sendSuccess([
                 'id' => (int) $insertId,
                 'player_name' => $playerName,
+                'email' => $email,
+                'phone' => $phone,
                 'score' => $score,
                 'level' => $level,
                 'position' => $position,

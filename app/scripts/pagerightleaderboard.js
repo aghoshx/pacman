@@ -145,7 +145,45 @@ class PageRightLeaderboardUI {
               color: #ffdf00;
               margin-bottom: 5px;
             ">Enter Your Name:</label>
-            <input type="text" id="player-name" maxlength="15" placeholder="Anonymous" style="
+            <input type="text" id="player-name" maxlength="50" placeholder="Your name" required style="
+              width: 100%;
+              padding: 10px;
+              border: 2px solid #2121ff;
+              border-radius: 5px;
+              background-color: #000;
+              color: #fff;
+              font-family: 'Courier New', monospace;
+              font-size: 16px;
+              text-align: center;
+              box-sizing: border-box;
+              margin-bottom: 15px;
+            " />
+            
+            <label for="player-email" style="
+              display: block;
+              color: #ffdf00;
+              margin-bottom: 5px;
+            ">Email (for winner notification):</label>
+            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" required style="
+              width: 100%;
+              padding: 10px;
+              border: 2px solid #2121ff;
+              border-radius: 5px;
+              background-color: #000;
+              color: #fff;
+              font-family: 'Courier New', monospace;
+              font-size: 16px;
+              text-align: center;
+              box-sizing: border-box;
+              margin-bottom: 15px;
+            " />
+            
+            <label for="player-phone" style="
+              display: block;
+              color: #ffdf00;
+              margin-bottom: 5px;
+            ">Phone (optional):</label>
+            <input type="tel" id="player-phone" maxlength="20" placeholder="+1 123 456 7890" style="
               width: 100%;
               padding: 10px;
               border: 2px solid #2121ff;
@@ -157,6 +195,11 @@ class PageRightLeaderboardUI {
               text-align: center;
               box-sizing: border-box;
             " />
+            
+            <p style="font-size: 12px; color: #ccc; margin-top: 15px; line-height: 1.4; text-align: center;">
+              🏆 Winners will be contacted via email<br>
+              📱 Phone helps us reach you faster
+            </p>
           </div>
         </div>
         <div class="name-input-footer" style="
@@ -396,13 +439,34 @@ class PageRightLeaderboardUI {
       name ||
       document.getElementById("player-name")?.value?.trim() ||
       "Anonymous";
-    console.log("Final player name:", playerName);
+    
+    const email = document.getElementById("player-email")?.value?.trim() || null;
+    const phone = document.getElementById("player-phone")?.value?.trim() || null;
+    
+    // Validate required fields
+    if (!email) {
+      alert("Email is required for winner notification!");
+      document.getElementById("player-email")?.focus();
+      return;
+    }
+    
+    // Basic email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      alert("Please enter a valid email address!");
+      document.getElementById("player-email")?.focus();
+      return;
+    }
+    
+    console.log("Final player info:", { playerName, email, phone });
 
     // Use the new method that checks for records
     const result = await this.leaderboard.addScoreWithRecordCheck(
       this.pendingScore.score,
       playerName,
-      this.pendingScore.level
+      this.pendingScore.level,
+      email,
+      phone
     );
 
     console.log("Score added, result:", result);
@@ -430,6 +494,8 @@ class PageRightLeaderboardUI {
     setTimeout(() => {
       this.nameInputModal.style.display = "none";
       document.getElementById("player-name").value = "";
+      document.getElementById("player-email").value = "";
+      document.getElementById("player-phone").value = "";
     }, 300);
   }
 

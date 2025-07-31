@@ -48,6 +48,10 @@ RewriteEngine On
     Require all denied
 </Files>
 
+<Files "credentials.json">
+    Require all denied
+</Files>
+
 <Files "*.log">
     Require all denied
 </Files>
@@ -60,8 +64,16 @@ RewriteEngine On
     Require all denied
 </Files>
 
-# Block direct access to the main API file
+# Block direct access to the main API files
 <Files "leaderboard-api.php">
+    Require all denied
+</Files>
+
+<Files "sheets-api.php">
+    Require all denied
+</Files>
+
+<Files "google-sheets-api.php">
     Require all denied
 </Files>
 

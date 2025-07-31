@@ -56,17 +56,17 @@ class GameConfig {
     
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       // Local development
-      return '/api/leaderboard-api.php';
+      return '/api';
     } else if (hostname.includes('stg-saasboomiorg-staging.kinsta.cloud')) {
       // Staging environment
-      return 'https://dev.matsio.com/game-api';
+      return '/api';
     } else if (hostname === 'saasboomi.org') {
       // Production environment
-      return 'https://dev.matsio.com/game-api';
+      return '/api';
     }
     
     // 3. Default fallback
-    return 'https://dev.matsio.com/game-api';
+    return '/api';
   }
   
   /**

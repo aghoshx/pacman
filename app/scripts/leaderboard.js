@@ -54,15 +54,17 @@ class Leaderboard {
    * @param {number} score - The player's score
    * @param {string} playerName - The player's name
    * @param {number} level - The level reached
+   * @param {string} email - The player's email (optional)
+   * @param {string} phone - The player's phone (optional)
    * @returns {Promise<Object>} Result with newRecord flag
    */
-  async addScoreWithRecordCheck(score, playerName = "Anonymous", level = 1) {
+  async addScoreWithRecordCheck(score, playerName = "Anonymous", level = 1, email = null, phone = null) {
     // Get current top score before submitting
     const currentTop = await this.getTopPlayer();
     const wasRecord = currentTop.success && score > currentTop.topScore;
 
     // Submit the score using your existing method
-    const result = await this.addScore(score, playerName, level);
+    const result = await this.addScore(score, playerName, level, email, phone);
 
     return {
       ...result,
@@ -77,14 +79,25 @@ class Leaderboard {
    * @param {number} score - The player's score
    * @param {string} playerName - The player's name (optional)
    * @param {number} level - The level reached (optional)
+   * @param {string} email - The player's email (optional)
+   * @param {string} phone - The player's phone (optional)
    * @returns {Object} Result object with position and whether it made the leaderboard
    */
-  async addScore(score, playerName = "Anonymous", level = 1) {
+  async addScore(score, playerName = "Anonymous", level = 1, email = null, phone = null) {
     const payload = {
       player_name: playerName.trim() || "Anonymous",
       score: score,
       level: level,
     };
+    
+    // Add email and phone if provided
+    if (email && email.trim()) {
+      payload.email = email.trim();
+    }
+    
+    if (phone && phone.trim()) {
+      payload.phone = phone.trim();
+    }
 
     try {
       const res = await fetch(`${this.apiUrl}/submit`, {

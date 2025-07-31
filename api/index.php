@@ -36,7 +36,7 @@ if (file_exists('.env')) {
  */
 class APIRouter {
     private $validActions = ['submit', 'leaderboard', 'top-player', 'stats', 'health'];
-    private $apiFile = 'leaderboard-api.php';
+    private $apiFile = 'sheets-api.php';
     
     public function __construct() {
         // Security check - ensure API file exists and is not directly accessible
@@ -172,31 +172,27 @@ class APIRouter {
             ]
         ];
         
-        // Test database connection
+        // Test Google Sheets connection
         try {
-            $config = [
-                'db_host' => $_ENV['DB_HOST'] ?? 'localhost',
-                'db_name' => $_ENV['DB_NAME'] ?? 'saasboomi_game',
-                'db_user' => $_ENV['DB_USER'] ?? 'saasboomi_game',
-                'db_pass' => $_ENV['DB_PASS'] ?? 'JCO]hB2rMrSuhqK(',
-            ];
+            $credentialsPath = __DIR__ . '/credentials.json';
             
-            $dsn = "mysql:host={$config['db_host']};dbname={$config['db_name']};charset=utf8mb4";
-            $pdo = new PDO($dsn, $config['db_user'], $config['db_pass']);
-            
-            // Quick test query
-            $stmt = $pdo->query("SELECT COUNT(*) FROM leaderboard");
-            $count = $stmt->fetchColumn();
-            
-            $health['database'] = [
-                'status' => 'connected',
-                'total_scores' => (int) $count
-            ];
+            if (file_exists($credentialsPath)) {
+                $health['google_sheets'] = [
+                    'status' => 'credentials_found',
+                    'spreadsheet_id' => '196hFMyXpn2Nqw6_XyS2Fzho1dwC7ONshiqcPG0MeP9E'
+                ];
+            } else {
+                $health['google_sheets'] = [
+                    'status' => 'credentials_missing',
+                    'message' => 'Google credentials file not found'
+                ];
+                http_response_code(503);
+            }
             
         } catch (Exception $e) {
-            $health['database'] = [
+            $health['google_sheets'] = [
                 'status' => 'error',
-                'message' => 'Database connection failed'
+                'message' => 'Google Sheets connection failed'
             ];
             http_response_code(503);
         }
@@ -214,8 +210,8 @@ class APIRouter {
         $info = [
             'name' => 'Pac-Man Leaderboard API',
             'version' => '1.0.0',
-            'description' => 'Professional API for managing game leaderboards',
-            'base_url' => 'https://dev.matsio.com/game-api',
+            'description' => 'Google Sheets-powered API for Caravan 25 contest leaderboards',
+            'base_url' => '/api',
             'endpoints' => [
                 [
                     'method' => 'POST',
@@ -224,6 +220,8 @@ class APIRouter {
                     'parameters' => [
                         'score' => 'number (required)',
                         'player_name' => 'string (optional)',
+                        'email' => 'string (required for winner contact)',
+                        'phone' => 'string (optional)',
                         'level' => 'number (optional)'
                     ]
                 ],
@@ -252,12 +250,14 @@ class APIRouter {
                 ]
             ],
             'features' => [
+                'Google Sheets integration',
+                'Real-time leaderboard updates',
+                'Winner contact collection',
                 'Rate limiting',
                 'Input validation',
                 'CORS support',
                 'Security headers',
-                'Error handling',
-                'Statistics tracking'
+                'Error handling'
             ],
             'documentation' => 'See README.md for detailed usage'
         ];
