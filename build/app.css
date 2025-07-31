@@ -555,6 +555,7 @@ body {
 .tooltip-content p {
   margin-bottom: 0;
 }
+
 .tooltip-trigger:hover + .tooltip-content {
   visibility: visible;
   opacity: 1;
