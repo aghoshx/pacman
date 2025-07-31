@@ -56,17 +56,17 @@ class GameConfig {
     
     if (hostname === 'localhost' || hostname === '127.0.0.1') {
       // Local development
-      return '/api';
+      return './api';
     } else if (hostname.includes('stg-saasboomiorg-staging.kinsta.cloud')) {
       // Staging environment
-      return '/api';
+      return './api';
     } else if (hostname === 'saasboomi.org') {
       // Production environment
-      return '/api';
+      return './api';
     }
     
-    // 3. Default fallback
-    return '/api';
+    // 3. Default fallback - relative to current directory
+    return './api';
   }
   
   /**
