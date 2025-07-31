@@ -1,0 +1,29 @@
+<!-- 
+  Game Configuration Override
+  
+  Include this in your HTML before loading the game scripts to override
+  default configuration settings.
+  
+  Example usage in index.html:
+  <script src="config.html"></script>
+  <script src="build/app.js"></script>
+-->
+
+<script>
+// Global Game Configuration Override
+window.GAME_CONFIG = {
+  // API Configuration
+  API_URL: 'https://dev.matsio.com/game-api',
+  
+  // Leaderboard Settings
+  MAX_LEADERBOARD_ENTRIES: 10,
+  AUTO_REFRESH_ENABLED: true,
+  REFRESH_INTERVAL_MS: 30000, // 30 seconds
+  
+  // Debug Settings
+  DEBUG_MODE: false,
+  ENABLE_ANALYTICS: true
+};
+
+console.log('🎮 Game configuration loaded:', window.GAME_CONFIG);
+</script>

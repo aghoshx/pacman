@@ -244,17 +244,22 @@ class PageRightLeaderboardUI {
    * Start auto-refresh for the leaderboard panel
    */
   async startAutoRefresh() {
+    // Get config for refresh settings
+    const config = window.GameConfig || { leaderboard: { autoRefresh: true, refreshInterval: 30000 } };
+    
     // Wait for initial scores to load, then update displays
     await this.leaderboard.loadScores();
     this.updateLeaderboardPanel();
     this.updateGlobalChampion();
 
-    // Auto-refresh every 30 seconds
-    setInterval(async () => {
-      await this.leaderboard.loadScores();
-      this.updateLeaderboardPanel();
-      this.updateGlobalChampion();
-    }, 30000);
+    // Auto-refresh based on config
+    if (config.leaderboard.autoRefresh) {
+      setInterval(async () => {
+        await this.leaderboard.loadScores();
+        this.updateLeaderboardPanel();
+        this.updateGlobalChampion();
+      }, config.leaderboard.refreshInterval);
+    }
   }
 
   /**
