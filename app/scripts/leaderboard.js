@@ -1,5 +1,5 @@
 class Leaderboard {
-  constructor(apiUrl = "https://dev.matsio.com/game-api/leaderboard.php") {
+  constructor(apiUrl = "https://dev.matsio.com/game-api") {
     this.maxEntries = 10;
     this.apiUrl = apiUrl;
     this.scores = [];
@@ -7,9 +7,10 @@ class Leaderboard {
 
   async loadScores() {
     try {
-      const res = await fetch(this.apiUrl);
+      const res = await fetch(`${this.apiUrl}/leaderboard`);
       if (!res.ok) throw new Error("Failed to fetch leaderboard");
-      this.scores = await res.json();
+      const response = await res.json();
+      this.scores = response.success ? response.data : [];
     } catch (err) {
       console.error("Error loading leaderboard:", err);
       this.scores = [];
@@ -22,17 +23,15 @@ class Leaderboard {
    */
   async getTopPlayer() {
     try {
-      const response = await fetch(
-        "https://dev.matsio.com/game-api/get-top-player.php"
-      );
+      const response = await fetch(`${this.apiUrl}/top-player`);
       const data = await response.json();
 
       if (data.success) {
         return {
           success: true,
-          topPlayer: data.top_player,
-          topScore: data.top_score,
-          achievedAt: data.achieved_at,
+          topPlayer: data.data.top_player,
+          topScore: data.data.top_score,
+          achievedAt: data.data.achieved_at,
         };
       } else {
         console.error("Failed to fetch top player:", data.error);
@@ -82,33 +81,36 @@ class Leaderboard {
     };
 
     try {
-      const res = await fetch(
-        "https://dev.matsio.com/game-api/submit-score.php",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(payload),
-        }
-      );
+      const res = await fetch(`${this.apiUrl}/submit`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
       if (!res.ok) throw new Error("Failed to submit score");
 
       const result = await res.json();
 
-      // Optionally reload scores after submission
-      await this.loadScores();
+      if (result.success) {
+        // Optionally reload scores after submission
+        await this.loadScores();
 
-      return {
-        madeLeaderboard: true,
-        result,
-      };
+        return {
+          madeLeaderboard: result.data.made_top_10,
+          position: result.data.position,
+          isNewRecord: result.data.is_new_record,
+          result: result.data,
+        };
+      } else {
+        throw new Error(result.error || "Failed to submit score");
+      }
     } catch (error) {
       console.error("Error submitting score:", error);
       return {
         madeLeaderboard: false,
-        error,
+        error: error.message,
       };
     }
   }
@@ -152,32 +154,54 @@ class Leaderboard {
   }
 
   /**
-   * Get leaderboard statistics
-   * @returns {Object} Statistics about the leaderboard
+   * Get leaderboard statistics from server
+   * @returns {Promise<Object>} Statistics about the leaderboard
    */
-  getStatistics() {
+  async getStatistics() {
+    try {
+      const response = await fetch(`${this.apiUrl}/stats`);
+      const data = await response.json();
+
+      if (data.success) {
+        return data.data;
+      } else {
+        console.error("Failed to fetch statistics:", data.error);
+        return this.getLocalStatistics();
+      }
+    } catch (error) {
+      console.error("Error fetching statistics:", error);
+      return this.getLocalStatistics();
+    }
+  }
+
+  /**
+   * Get local statistics as fallback
+   * @returns {Object} Local statistics
+   */
+  getLocalStatistics() {
     if (this.scores.length === 0) {
       return {
-        totalGames: 0,
-        averageScore: 0,
-        highestLevel: 0,
-        oldestEntry: null,
-        newestEntry: null,
+        total_scores: 0,
+        average_score: 0,
+        highest_score: 0,
+        highest_level: 0,
+        unique_players: 0,
+        active_days: 0,
       };
     }
 
     const totalScore = this.scores.reduce((sum, entry) => sum + entry.score, 0);
-    const highestLevel = Math.max(...this.scores.map((entry) => entry.level));
-    const sortedByDate = [...this.scores].sort(
-      (a, b) => new Date(a.date) - new Date(b.date)
-    );
+    const highestScore = Math.max(...this.scores.map((entry) => entry.score));
+    const highestLevel = Math.max(...this.scores.map((entry) => entry.level || 1));
+    const uniquePlayers = new Set(this.scores.map((entry) => entry.player_name)).size;
 
     return {
-      totalGames: this.scores.length,
-      averageScore: Math.round(totalScore / this.scores.length),
-      highestLevel: highestLevel,
-      oldestEntry: sortedByDate[0],
-      newestEntry: sortedByDate[sortedByDate.length - 1],
+      total_scores: this.scores.length,
+      average_score: Math.round(totalScore / this.scores.length),
+      highest_score: highestScore,
+      highest_level: highestLevel,
+      unique_players: uniquePlayers,
+      active_days: 1, // Can't calculate from local data
     };
   }
 
