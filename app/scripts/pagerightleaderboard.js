@@ -243,13 +243,15 @@ class PageRightLeaderboardUI {
   /**
    * Start auto-refresh for the leaderboard panel
    */
-  startAutoRefresh() {
-    // Update both leaderboard and champion immediately
+  async startAutoRefresh() {
+    // Wait for initial scores to load, then update displays
+    await this.leaderboard.loadScores();
     this.updateLeaderboardPanel();
     this.updateGlobalChampion();
 
     // Auto-refresh every 30 seconds
-    setInterval(() => {
+    setInterval(async () => {
+      await this.leaderboard.loadScores();
       this.updateLeaderboardPanel();
       this.updateGlobalChampion();
     }, 30000);

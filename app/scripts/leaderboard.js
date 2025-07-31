@@ -3,6 +3,9 @@ class Leaderboard {
     this.maxEntries = 10;
     this.apiUrl = apiUrl;
     this.scores = [];
+    
+    // Load scores from database on initialization
+    this.loadScores();
   }
 
   async loadScores() {
@@ -151,6 +154,16 @@ class Leaderboard {
     this.scores = [];
     // Since you're using API, refresh from server
     this.loadScores();
+  }
+
+  /**
+   * Save scores (compatibility method - scores are now saved via API)
+   * This method exists for backward compatibility with existing UI code
+   */
+  saveScores() {
+    // No-op: Scores are automatically saved to database via API calls
+    // This method exists only for backward compatibility
+    console.log('saveScores() called - scores are now automatically saved via API');
   }
 
   /**
