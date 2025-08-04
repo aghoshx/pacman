@@ -293,12 +293,12 @@ class PageRightLeaderboardUI {
     const playerNameInput = document.getElementById("player-name");
     if (playerNameInput) {
       playerNameInput.addEventListener("focus", () => {
-        playerNameInput.style.borderColor = "#ffdf00";
-        playerNameInput.style.boxShadow = "0 0 10px rgba(255, 223, 0, 0.3)";
+        playerNameInput.classList.add("input-highlight-yellow");
+        playerNameInput.classList.remove("input-highlight-blue");
       });
       playerNameInput.addEventListener("blur", () => {
-        playerNameInput.style.borderColor = "#2121ff";
-        playerNameInput.style.boxShadow = "none";
+        playerNameInput.classList.add("input-highlight-blue");
+        playerNameInput.classList.remove("input-highlight-yellow");
       });
     }
   }
@@ -424,12 +424,16 @@ class PageRightLeaderboardUI {
       } else {
         positionElement.textContent = `New #${positionInfo.position} high score!`;
       }
-      positionElement.style.display = "block";
+      positionElement.classList.remove('game-element-hidden');
+      positionElement.classList.add('game-element-visible');
     } else {
-      positionElement.style.display = "none";
+      positionElement.classList.remove('game-element-visible');
+      positionElement.classList.add('game-element-hidden');
     }
 
-    this.nameInputModal.style.display = "flex";
+    this.nameInputModal.classList.add('modal-flex-display');
+    this.nameInputModal.classList.remove('modal-none-display');
+    // Note: opacity and transform are kept as inline styles since they're part of animation sequence
     setTimeout(() => {
       this.nameInputModal.style.opacity = "1";
       this.nameInputModal.querySelector(".name-input-content").style.transform =
@@ -514,12 +518,14 @@ class PageRightLeaderboardUI {
    * Hide name input modal
    */
   hideNameInput() {
+    // Note: opacity and transform are kept as inline styles since they're part of animation sequence
     this.nameInputModal.style.opacity = "0";
     this.nameInputModal.querySelector(".name-input-content").style.transform =
       "scale(0.8)";
 
     setTimeout(() => {
-      this.nameInputModal.style.display = "none";
+      this.nameInputModal.classList.add('modal-none-display');
+      this.nameInputModal.classList.remove('modal-flex-display');
       document.getElementById("player-name").value = "";
       document.getElementById("player-email").value = "";
       document.getElementById("player-phone").value = "";

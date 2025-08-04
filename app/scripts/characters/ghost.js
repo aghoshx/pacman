@@ -100,6 +100,7 @@ class Ghost {
     this.spriteFrames = 2;
     this.backgroundOffsetPixels = 0;
     this.animationTarget.style.backgroundPosition = '0px 0px';
+    this.animationTarget.classList.add('ghost-character');
   }
 
   /**
@@ -816,9 +817,15 @@ class Ghost {
     this.animationTarget.style.top = `${newTop}px`;
     this.animationTarget.style.left = `${newLeft}px`;
 
-    this.animationTarget.style.visibility = this.display
-      ? this.characterUtil.checkForStutter(this.position, this.oldPosition)
-      : 'hidden';
+    const shouldBeVisible = this.display && this.characterUtil.checkForStutter(this.position, this.oldPosition) === 'visible';
+    
+    if (shouldBeVisible) {
+      this.animationTarget.classList.remove('character-hidden');
+      this.animationTarget.classList.add('character-visible');
+    } else {
+      this.animationTarget.classList.remove('character-visible');
+      this.animationTarget.classList.add('character-hidden');
+    }
 
     const updatedProperties = this.characterUtil.advanceSpriteSheet(this);
     this.msSinceLastSprite = updatedProperties.msSinceLastSprite;

@@ -136,13 +136,14 @@ class GameCoordinator {
    * Reveals the game underneath the loading covers and starts gameplay
    */
   startButtonClick() {
-    this.leftCover.style.left = '-50%';
-    this.rightCover.style.right = '-50%';
-    this.mainMenu.style.opacity = 0;
+    this.leftCover.classList.add('cover-left-hidden');
+    this.rightCover.classList.add('cover-right-hidden');
+    this.mainMenu.classList.add('loading-opacity-fade');
     this.gameStartButton.disabled = true;
 
     setTimeout(() => {
-      this.mainMenu.style.visibility = 'hidden';
+      this.mainMenu.classList.add('main-menu-hidden');
+      this.mainMenu.classList.remove('main-menu-visible');
     }, 1000);
 
     this.reset();
@@ -176,11 +177,10 @@ class GameCoordinator {
   displayErrorMessage() {
     const loadingContainer = document.getElementById('loading-container');
     const errorMessage = document.getElementById('error-message');
-    loadingContainer.style.opacity = 0;
+    loadingContainer.classList.add('loading-opacity-fade');
     setTimeout(() => {
       loadingContainer.remove();
-      errorMessage.style.opacity = 1;
-      errorMessage.style.visibility = 'visible';
+      errorMessage.classList.add('error-message-visible');
     }, 1500);
   }
 
@@ -312,13 +312,13 @@ class GameCoordinator {
 
       Promise.all([this.createElements(imgSources, 'img', totalSources, this), this.createElements(audioSources, 'audio', totalSources, this)])
         .then(() => {
-          loadingContainer.style.opacity = 0;
+          loadingContainer.classList.add('loading-opacity-fade');
           resolve();
 
           setTimeout(() => {
             loadingContainer.remove();
-            this.mainMenu.style.opacity = 1;
-            this.mainMenu.style.visibility = 'visible';
+            this.mainMenu.classList.add('main-menu-visible');
+            this.mainMenu.classList.remove('main-menu-hidden');
           }, 1500);
         })
         .catch(this.displayErrorMessage);
@@ -737,8 +737,10 @@ class GameCoordinator {
 
       if (this.gameEngine.started) {
         this.soundManager.resumeAmbience();
-        this.gameUi.style.filter = 'unset';
-        this.pausedText.style.visibility = 'hidden';
+        this.gameUi.classList.add('game-ui-clear');
+        this.gameUi.classList.remove('game-ui-blur');
+        this.pausedText.classList.add('game-element-hidden');
+        this.pausedText.classList.remove('game-element-visible');
         this.pauseButton.innerHTML = 'pause';
         this.activeTimers.forEach((timer) => {
           timer.resume();
@@ -746,8 +748,10 @@ class GameCoordinator {
       } else {
         this.soundManager.stopAmbience();
         this.soundManager.setAmbience('pause_beat', true);
-        this.gameUi.style.filter = 'blur(5px)';
-        this.pausedText.style.visibility = 'visible';
+        this.gameUi.classList.add('game-ui-blur');
+        this.gameUi.classList.remove('game-ui-clear');
+        this.pausedText.classList.add('game-element-visible');
+        this.pausedText.classList.remove('game-element-hidden');
         this.pauseButton.innerHTML = 'play_arrow';
         this.activeTimers.forEach((timer) => {
           timer.pause();
@@ -833,10 +837,12 @@ class GameCoordinator {
         this.lives -= 1;
 
         new Timer(() => {
-          this.mazeCover.style.visibility = 'visible';
+          this.mazeCover.classList.add('game-element-visible');
+          this.mazeCover.classList.remove('game-element-hidden');
           new Timer(() => {
             this.allowKeyPresses = true;
-            this.mazeCover.style.visibility = 'hidden';
+            this.mazeCover.classList.add('game-element-hidden');
+            this.mazeCover.classList.remove('game-element-visible');
             this.pacman.reset();
             this.ghosts.forEach((ghost) => {
               ghost.reset();
@@ -905,13 +911,15 @@ class GameCoordinator {
 
       // Show main menu after delay
       new Timer(() => {
-        this.leftCover.style.left = '0';
-        this.rightCover.style.right = '0';
+        this.leftCover.classList.remove('cover-left-hidden');
+        this.leftCover.classList.add('cover-left-visible');
+        this.rightCover.classList.remove('cover-right-hidden');
+        this.rightCover.classList.add('cover-right-visible');
 
         new Timer(() => {
-          this.mainMenu.style.opacity = 1;
+          this.mainMenu.classList.add('main-menu-visible');
+          this.mainMenu.classList.remove('main-menu-hidden');
           this.gameStartButton.disabled = false;
-          this.mainMenu.style.visibility = 'visible';
         }, 1000);
       }, 2500);
     }, 2250);
@@ -1031,9 +1039,11 @@ class GameCoordinator {
               new Timer(() => {
                 this.mazeImg.src = `${imgBase}maze_blue.svg`;
                 new Timer(() => {
-                  this.mazeCover.style.visibility = 'visible';
+                  this.mazeCover.classList.add('game-element-visible');
+                  this.mazeCover.classList.remove('game-element-hidden');
                   new Timer(() => {
-                    this.mazeCover.style.visibility = 'hidden';
+                    this.mazeCover.classList.add('game-element-hidden');
+                    this.mazeCover.classList.remove('game-element-visible');
                     this.level += 1;
                     this.allowKeyPresses = true;
                     this.entityList.forEach((entity) => {

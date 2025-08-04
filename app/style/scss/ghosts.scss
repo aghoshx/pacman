@@ -1,5 +1,11 @@
+@use '../scss/variables' as *;
+
 .ghost {
   margin: 0;
   position: absolute;
   z-index: 2;
+}
+
+.ghost-character {
+  background-position: 0px 0px;
 }

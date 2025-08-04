@@ -45,7 +45,8 @@ class Pacman {
     this.msSinceLastSprite = 0;
     this.spriteFrames = 4;
     this.backgroundOffsetPixels = 0;
-    this.animationTarget.style.backgroundPosition = '0px 0px';
+    this.animationTarget.classList.add('pacman-character');
+    this.pacmanArrow.classList.add('pacman-arrow');
   }
 
   /**
@@ -217,10 +218,19 @@ class Pacman {
     this.animationTarget.style.top = `${newTop}px`;
     this.animationTarget.style.left = `${newLeft}px`;
 
-    this.animationTarget.style.visibility = this.display
-      ? this.characterUtil.checkForStutter(this.position, this.oldPosition)
-      : 'hidden';
-    this.pacmanArrow.style.visibility = this.animationTarget.style.visibility;
+    const shouldBeVisible = this.display && this.characterUtil.checkForStutter(this.position, this.oldPosition) === 'visible';
+    
+    if (shouldBeVisible) {
+      this.animationTarget.classList.remove('character-hidden');
+      this.animationTarget.classList.add('character-visible');
+      this.pacmanArrow.classList.remove('character-hidden');
+      this.pacmanArrow.classList.add('character-visible');
+    } else {
+      this.animationTarget.classList.remove('character-visible');
+      this.animationTarget.classList.add('character-hidden');
+      this.pacmanArrow.classList.remove('character-visible');
+      this.pacmanArrow.classList.add('character-hidden');
+    }
 
     this.updatePacmanArrowPosition(this.position, this.scaledTileSize);
 

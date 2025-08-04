@@ -1,5 +1,23 @@
+@use '../scss/variables' as *;
+
 .pacman {
   margin: 0;
   position: absolute;
   z-index: 1;
+}
+
+.pacman-character {
+  background-position: 0px 0px;
+}
+
+.pacman-arrow {
+  position: absolute;
+}
+
+.character-hidden {
+  visibility: hidden;
+}
+
+.character-visible {
+  visibility: visible;
 }

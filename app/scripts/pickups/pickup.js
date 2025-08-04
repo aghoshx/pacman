@@ -24,8 +24,8 @@ class Pickup {
    * Resets the pickup's visibility
    */
   reset() {
-    this.animationTarget.style.visibility = (this.type === 'fruit')
-      ? 'hidden' : 'visible';
+    this.animationTarget.className = (this.type === 'fruit')
+      ? 'pickup-base pickup-hidden' : 'pickup-base pickup-visible';
   }
 
   /**
@@ -57,7 +57,7 @@ class Pickup {
     };
 
     this.animationTarget = document.createElement('div');
-    this.animationTarget.style.position = 'absolute';
+    this.animationTarget.className = 'pickup-base';
     this.animationTarget.style.backgroundSize = `${this.size}px`;
     this.animationTarget.style.backgroundImage = this.determineImage(
       type, points,
@@ -102,14 +102,16 @@ class Pickup {
     this.animationTarget.style.backgroundImage = this.determineImage(
       this.type, points,
     );
-    this.animationTarget.style.visibility = 'visible';
+    this.animationTarget.classList.remove('pickup-hidden');
+    this.animationTarget.classList.add('pickup-visible');
   }
 
   /**
    * Makes the fruit invisible (happens if Pacman was too slow)
    */
   hideFruit() {
-    this.animationTarget.style.visibility = 'hidden';
+    this.animationTarget.classList.remove('pickup-visible');
+    this.animationTarget.classList.add('pickup-hidden');
   }
 
   /**
@@ -137,7 +139,7 @@ class Pickup {
    * @param {Boolean} debugging - Flag to change the appearance of pickups for testing
    */
   checkPacmanProximity(maxDistance, pacmanCenter, debugging) {
-    if (this.animationTarget.style.visibility !== 'hidden') {
+    if (!this.animationTarget.classList.contains('pickup-hidden')) {
       const distance = Math.sqrt(
         ((this.center.x - pacmanCenter.x) ** 2)
         + ((this.center.y - pacmanCenter.y) ** 2),
@@ -157,7 +159,7 @@ class Pickup {
    * @returns {Boolean}
    */
   shouldCheckForCollision() {
-    return this.animationTarget.style.visibility !== 'hidden'
+    return !this.animationTarget.classList.contains('pickup-hidden')
       && this.nearPacman;
   }
 
@@ -179,7 +181,8 @@ class Pickup {
           size: this.pacman.measurement,
         },
       )) {
-        this.animationTarget.style.visibility = 'hidden';
+        this.animationTarget.classList.remove('pickup-visible');
+        this.animationTarget.classList.add('pickup-hidden');
         window.dispatchEvent(new CustomEvent('awardPoints', {
           detail: {
             points: this.points,

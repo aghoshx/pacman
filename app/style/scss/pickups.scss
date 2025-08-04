@@ -1,3 +1,21 @@
+@use '../scss/variables' as *;
+
+.pickup-base {
+  position: absolute;
+}
+
+.pickup-hidden {
+  visibility: hidden;
+}
+
+.pickup-visible {
+  visibility: visible;
+}
+
+.pickup-near-pacman {
+  background: linear-gradient(45deg, #ff0000, #ffff00, #ff0000);
+}
+
 .power-pellet {
   animation: blink .3s infinite;
 }
