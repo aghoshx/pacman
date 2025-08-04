@@ -38,9 +38,7 @@ body {
   flex-direction: column;
   justify-content: center;
   @media (max-height: 659px) {
-    .page-left {
-      justify-content: flex-start;
-    }
+    justify-content: flex-start;
   }
   /* Brand Logo Section */
   .brand-logo {
