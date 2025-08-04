@@ -1,3 +1,8 @@
+// Functions
+@function ptr($px) {
+  @return #{$px / 16}rem;
+}
+
 // Animations
 $generic-duration: .5s;
 $loading-pacman-duration: 1s;

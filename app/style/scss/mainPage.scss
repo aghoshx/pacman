@@ -4,6 +4,10 @@
   font-family: "Press Start 2P", sans-serif;
 }
 
+html {
+  scroll-behavior: smooth;
+  font-size: clamp(12px, 1.01137vw, 20px);
+}
 /* Layout styles for page-left, center content, and page-right with leaderboard */
 
 body {
@@ -20,11 +24,11 @@ body {
 }
 .page-left {
   width: 100%;
-  max-width: 300px;
+  max-width: ptr(300px);
   background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
-  border-right: 3px solid #fcc73f;
-  padding: 20px;
-  box-shadow: 5px 0 20px rgba(252, 199, 63, 0.2);
+  border-right: ptr(3px) solid #fcc73f;
+  padding: ptr(20px);
+  box-shadow: ptr(5px) 0 ptr(20px) rgba(252, 199, 63, 0.2);
   overflow-y: auto;
   position: relative;
   display: flex;
@@ -37,9 +41,9 @@ body {
 
     .brand-logo-icon {
       font-size: 4rem;
-      margin-bottom: 15px;
+      margin-bottom: ptr(15px);
       display: block;
-      filter: drop-shadow(3px 3px 6px rgba(0, 0, 0, 0.1));
+      filter: drop-shadow(ptr(3px) ptr(3px) ptr(6px) rgba(0, 0, 0, 0.1));
     }
 
     .brand-title {
@@ -47,13 +51,13 @@ body {
       color: #231f20;
       margin: 0;
       line-height: 1.4;
-      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1);
+      text-shadow: 2px 2px ptr(4px) rgba(0, 0, 0, 0.1);
     }
 
     .brand-subtitle {
       font-size: 0.7rem;
       color: #666;
-      margin: 15px 0;
+      margin: ptr(15px) 0;
       line-height: 1.6;
     }
   }
@@ -63,36 +67,36 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    margin-bottom: 40px;
+    margin-bottom: ptr(40px);
 
     .brand-description {
       font-size: 0.6rem;
       color: #555;
       line-height: 1.8;
-      margin: 20px 0;
+      margin: ptr(20px) 0;
       text-align: center;
     }
 
     /* CTA Button */
     .cta-button {
       background-color: #fcc73f;
-      border: 3px solid #231f20;
-      border-radius: 8px;
+      border: ptr(3px) solid #231f20;
+      border-radius: ptr(8px);
       color: #231f20;
       cursor: pointer;
       font-size: 0.8rem;
       font-weight: bold;
-      padding: 15px 20px;
+      padding: ptr(15px) ptr(20px);
       text-decoration: none;
       text-align: center;
       transition: all 0.2s ease;
-      box-shadow: 3px 3px #ee2a29;
+      box-shadow: ptr(3px) ptr(3px) #ee2a29;
       display: inline-block;
-      margin-top: 20px;
+      margin-top: ptr(20px);
 
       &:hover {
         transform: translateY(-2px);
-        box-shadow: 5px 5px #ee2a29;
+        box-shadow: ptr(5px) ptr(5px) #ee2a29;
       }
 
       &:active {
@@ -108,14 +112,14 @@ body {
     margin: 0;
   }
   .how-to-win p {
-    font-size: 10px;
+    font-size: ptr(10px);
     color: #555;
     line-height: 1.8;
-    margin-bottom: 20px;
+    margin-bottom: ptr(20px);
   }
   .unlock-rewards h4 {
     font-size: 1.2rem;
-    margin-top: 10px;
+    margin-top: ptr(10px);
     margin-bottom: 0;
   }
   .unlock-rewards ul {
@@ -129,7 +133,7 @@ body {
     font-size: 0.6rem;
     color: #555;
     line-height: 1.8;
-    margin: 20px 0;
+    margin: ptr(20px) 0;
   }
 
   .eligibility-check {
@@ -141,36 +145,36 @@ body {
     cursor: pointer;
     display: inline-flex; /* keeps image and text inline with tight wrap */
     align-items: center;
-    gap: 4px; /* space between text and image */
-    border-radius: 4px;
+    gap: ptr(4px); /* space between text and image */
+    border-radius: ptr(4px);
     font-weight: bold;
-    font-size: 15px;
+    font-size: ptr(15px);
   }
   .tooltip-content {
     visibility: hidden;
     opacity: 0;
-    width: 450px;
+    width: ptr(450px);
     background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
     color: #000000;
     text-align: left;
-    border-radius: 6px;
+    border-radius: ptr(6px);
     border: 1px solid black;
-    padding: 8px;
+    padding: ptr(8px);
     position: absolute;
     top: 50%;
     left: 100%;
     transform: translateY(-63%);
     z-index: 9999;
     transition: opacity 0.3s ease;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 2px ptr(8px) rgba(0, 0, 0, 0.2);
   }
   .tooltip-content p {
     margin-bottom: 0;
     font-size: 0.5rem;
   }
   .tooltip-trigger img {
-    width: 35px;
-    height: 35px;
+    width: ptr(35px);
+    height: ptr(35px);
     display: inline-block;
     vertical-align: middle;
   }
@@ -191,7 +195,7 @@ body {
   align-items: center;
   margin: 0 auto;
   width: 100%;
-  max-width: 900px;
+  max-width: ptr(900px);
   overflow: hidden;
   position: relative;
   touch-action: manipulation;
@@ -203,11 +207,11 @@ body {
 
 .page-right {
   width: 100%;
-  max-width: 300px;
+  max-width: ptr(300px);
   background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
-  border-left: 3px solid #fcc73f;
-  padding: 20px;
-  box-shadow: -5px 0 20px rgba(252, 199, 63, 0.2);
+  border-left: ptr(3px) solid #fcc73f;
+  padding: ptr(20px);
+  box-shadow: -ptr(5px) 0 ptr(20px) rgba(252, 199, 63, 0.2);
   overflow-y: auto;
   position: relative;
 
@@ -217,7 +221,7 @@ body {
       h2 {
         color: #231f20;
         font-size: 1rem;
-        margin: 0 0 20px 0;
+        margin: 0 0 ptr(20px) 0;
         text-align: center;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
       }
@@ -225,9 +229,9 @@ body {
 
     .panel-score-entry {
       display: grid;
-      grid-template-columns: 30px 1fr 80px;
-      gap: 10px;
-      padding: 8px 0;
+      grid-template-columns: ptr(30px) 1fr ptr(80px);
+      gap: ptr(10px);
+      padding: ptr(8px) 0;
       border-bottom: 1px solid #e0e0e0;
       align-items: center;
       font-size: 0.6rem;
@@ -238,17 +242,13 @@ body {
       }
 
       &.first-place {
-        background: linear-gradient(
-          90deg,
-          rgba(252, 199, 63, 0.2) 0%,
-          rgba(252, 199, 63, 0) 100%
-        );
-        border-left: 4px solid #fcc73f;
-        padding-left: 6px;
+        background: linear-gradient(90deg, rgba(252, 199, 63, 0.2) 0%, rgba(252, 199, 63, 0) 100%);
+        border-left: ptr(4px) solid #fcc73f;
+        padding-left: ptr(6px);
 
         .rank {
           color: #ee2a29;
-          text-shadow: 0 0 5px #ee2a29;
+          text-shadow: 0 0 ptr(5px) #ee2a29;
         }
       }
 
@@ -276,22 +276,22 @@ body {
       text-align: center;
       color: #888;
       font-style: italic;
-      padding: 40px 20px;
+      padding: ptr(40px) ptr(20px);
       font-size: 0.7rem;
     }
 
     .clear-panel-button {
       background-color: #ee2a29;
       border: 2px solid #231f20;
-      border-radius: 5px;
+      border-radius: ptr(5px);
       color: #fff;
       cursor: pointer;
       font-size: 0.6rem;
       font-weight: bold;
-      padding: 8px 15px;
+      padding: ptr(8px) ptr(15px);
       transition: all 0.2s ease;
       width: 100%;
-      margin-top: 15px;
+      margin-top: ptr(15px);
 
       &:hover {
         background-color: #cc2222;
@@ -303,18 +303,18 @@ body {
     margin-top: auto;
 
     .terms-and-conditions h3 {
-      font-size: 14px;
+      font-size: ptr(14px);
       color: #fcc73f;
       line-height: 1.8;
-      margin-bottom: 6px;
+      margin-bottom: ptr(6px);
     }
     .terms-and-conditions ul {
-      padding-left: 20px;
-      margin: 10px 0;
+      padding-left: ptr(20px);
+      margin: ptr(10px) 0;
     }
 
     .terms-and-conditions li {
-      margin-bottom: 6px;
+      margin-bottom: ptr(6px);
       font-size: 0.6rem;
       color: #f1f1f1;
       line-height: 1.8;
@@ -329,10 +329,10 @@ body {
 }
 
 /* Responsive design for smaller screens */
-@media only screen and (max-width: 1200px) {
+@media only screen and (max-width: ptr(1200px)) {
   .page-left {
-    width: 150px;
-    padding: 15px;
+    width: ptr(150px);
+    padding: ptr(15px);
 
     .brand-logo {
       .brand-logo-icon {
@@ -346,33 +346,33 @@ body {
   }
 
   .page-right {
-    width: 250px;
-    padding: 15px;
+    width: ptr(250px);
+    padding: ptr(15px);
   }
 }
 
-@media only screen and (max-width: 1000px) {
+@media only screen and (max-width: ptr(1000px)) {
   .page-left {
     display: none;
   }
 
   .page-right {
-    width: 200px;
-    padding: 10px;
+    width: ptr(200px);
+    padding: ptr(10px);
   }
 }
 
-@media only screen and (max-width: 768px) {
+@media only screen and (max-width: ptr(768px)) {
   body {
     flex-direction: column;
   }
 
   .page-right {
     width: 100%;
-    height: 200px;
+    height: ptr(200px);
     border-left: none;
-    border-top: 3px solid #fcc73f;
-    box-shadow: 0 -5px 20px rgba(252, 199, 63, 0.2);
+    border-top: ptr(3px) solid #fcc73f;
+    box-shadow: 0 -ptr(5px) ptr(20px) rgba(252, 199, 63, 0.2);
   }
 
   .overflow-mask {
@@ -395,7 +395,7 @@ body {
 /* Scrollbar styling for page-left and page-right */
 .page-left::-webkit-scrollbar,
 .page-right::-webkit-scrollbar {
-  width: 8px;
+  width: ptr(8px);
 }
 
 .page-left::-webkit-scrollbar-track,
@@ -406,7 +406,7 @@ body {
 .page-left::-webkit-scrollbar-thumb,
 .page-right::-webkit-scrollbar-thumb {
   background: #fcc73f;
-  border-radius: 4px;
+  border-radius: ptr(4px);
 }
 
 .page-left::-webkit-scrollbar-thumb:hover,
@@ -418,13 +418,13 @@ body {
 .page-left button:hover,
 .page-right button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 ptr(4px) ptr(8px) rgba(0, 0, 0, 0.3);
 }
 
 .page-left button:active,
 .page-right button:active {
   transform: translateY(0);
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 2px ptr(4px) rgba(0, 0, 0, 0.3);
 }
 
 // Original game styles below (keeping them unchanged)
@@ -435,8 +435,8 @@ body {
 
 .fps-display {
   position: absolute;
-  right: 10px;
-  top: 10px;
+  right: ptr(10px);
+  top: ptr(10px);
   visibility: hidden;
 }
 
@@ -479,7 +479,7 @@ body {
     padding: 0;
 
     .material-icons {
-      font-size: 40px;
+      font-size: ptr(40px);
     }
   }
 }
@@ -487,7 +487,7 @@ body {
 .paused-text {
   align-items: center;
   display: flex;
-  font-size: 50px;
+  font-size: ptr(50px);
   height: 100%;
   justify-content: center;
   left: 0;
@@ -604,25 +604,25 @@ body {
 }
 
 .logo {
-  width: 800px;
+  width: ptr(800px);
   max-width: 80vw;
   margin-top: 25vh;
 }
 
 .game-start {
   background-color: $logo-yellow;
-  border: 5px solid $logo-black;
-  border-radius: 10px;
-  box-shadow: 5px 5px $logo-red;
+  border: ptr(5px) solid $logo-black;
+  border-radius: ptr(10px);
+  box-shadow: ptr(5px) ptr(5px) $logo-red;
   color: $logo-black;
   cursor: pointer;
-  font-size: 48px;
+  font-size: ptr(48px);
   outline: none;
-  padding: 16px;
+  padding: ptr(16px);
 
   &:active {
     box-shadow: none;
-    transform: translateX(5px) translateY(5px);
+    transform: translateX(ptr(5px)) translateY(ptr(5px));
   }
 
   &:disabled {
@@ -630,7 +630,7 @@ body {
   }
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: ptr(600px)) {
   .game-start {
     scale: 0.5;
   }
