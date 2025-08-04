@@ -231,6 +231,26 @@
   box-shadow: 0 0 ptr(10px) rgba(255, 223, 0, 0.3);
 }
 
+/* reCAPTCHA Styles */
+.recaptcha-group {
+  margin: ptr(15px) 0;
+  display: flex;
+  justify-content: center;
+}
+
+.g-recaptcha {
+  transform: scale(0.9);
+  transform-origin: center;
+}
+
+.recaptcha-error {
+  color: #ff4444;
+  font-family: 'Courier New', monospace;
+  font-size: ptr(12px);
+  text-align: center;
+  margin-top: ptr(10px);
+}
+
 /* Button Styles */
 .leaderboard-footer, .name-input-footer {
   display: flex;

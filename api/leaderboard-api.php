@@ -39,6 +39,7 @@ class LeaderboardAPI {
             'rate_limit' => $_ENV['RATE_LIMIT'] ?? 60, // requests per hour
             'max_name_length' => $_ENV['MAX_NAME_LENGTH'] ?? 50,
             'max_score' => $_ENV['MAX_SCORE'] ?? 999999,
+            'recaptcha_secret' => $_ENV['RECAPTCHA_SECRET'] ?? '6LdbIporAAAAAMYwRqLzQ6bsY-A3UI1-Kuma9Net',
         ];
     }
     
@@ -190,8 +191,15 @@ class LeaderboardAPI {
                     $this->getStats();
                     break;
                     
+                case 'verify_recaptcha':
+                    if ($method !== 'POST') {
+                        $this->sendError('POST method required for reCAPTCHA verification', 405);
+                    }
+                    $this->verifyRecaptcha();
+                    break;
+                    
                 default:
-                    $this->sendError('Invalid action. Use: submit, leaderboard, top-player, or stats', 400);
+                    $this->sendError('Invalid action. Use: submit, leaderboard, top-player, stats, or verify_recaptcha', 400);
             }
             
         } catch (Exception $e) {
@@ -446,6 +454,66 @@ class LeaderboardAPI {
         $result = $stmt->fetch();
         
         return $result['max_score'] === null || $score > $result['max_score'];
+    }
+    
+    /**
+     * Verify reCAPTCHA response with Google
+     */
+    private function verifyRecaptcha() {
+        $input = json_decode(file_get_contents('php://input'), true);
+        
+        if (!$input || !isset($input['recaptcha_response'])) {
+            $this->sendError('reCAPTCHA response is required', 400);
+        }
+        
+        $recaptchaResponse = $input['recaptcha_response'];
+        $secretKey = $this->config['recaptcha_secret'];
+        $remoteIp = $_SERVER['REMOTE_ADDR'] ?? '';
+        
+        // Verify with Google reCAPTCHA API
+        $verifyUrl = 'https://www.google.com/recaptcha/api/siteverify';
+        $data = [
+            'secret' => $secretKey,
+            'response' => $recaptchaResponse,
+            'remoteip' => $remoteIp
+        ];
+        
+        $options = [
+            'http' => [
+                'header' => "Content-type: application/x-www-form-urlencoded\r\n",
+                'method' => 'POST',
+                'content' => http_build_query($data)
+            ]
+        ];
+        
+        $context = stream_context_create($options);
+        $result = file_get_contents($verifyUrl, false, $context);
+        
+        if ($result === false) {
+            $this->sendError('Failed to verify reCAPTCHA', 500);
+        }
+        
+        $responseData = json_decode($result, true);
+        
+        if (!$responseData) {
+            $this->sendError('Invalid reCAPTCHA response', 500);
+        }
+        
+        $success = $responseData['success'] ?? false;
+        $score = $responseData['score'] ?? 0;
+        
+        // For reCAPTCHA v2, we only need to check success
+        // For v3, you might want to check the score as well
+        if ($success) {
+            $this->sendSuccess([
+                'verified' => true,
+                'score' => $score,
+                'timestamp' => date('c')
+            ], 'reCAPTCHA verified successfully');
+        } else {
+            $errorCodes = $responseData['error-codes'] ?? [];
+            $this->sendError('reCAPTCHA verification failed: ' . implode(', ', $errorCodes), 400);
+        }
     }
     
     /**
