@@ -2,10 +2,7 @@
 <html>
   <head>
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script
-      async
-      src="https://www.googletagmanager.com/gtag/js?id=UA-142539004-1"
-    ></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142539004-1"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag() {
@@ -18,21 +15,12 @@
 
     <script src="build/app.js"></script>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <link
-      href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-      rel="stylesheet"
-    />
+    <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
     <title>Pacman</title>
     <meta name="author" content="Brent Ward" />
-    <meta
-      name="description"
-      content="The classic arcade game Pac-Man! Remade in Javascript by Brent Ward"
-    />
+    <meta name="description" content="The classic arcade game Pac-Man! Remade in Javascript by Brent Ward" />
     <meta name="keywords" content="Pac-Man, games, retro, arcade" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
   </head>
@@ -40,33 +28,17 @@
   <body>
     <div class="page-left">
       <div class="brand-logo">
-        <img
-          id="company-logo"
-          class="company-logo"
-          src="app/style/graphics/logo.svg"
-          alt="Logo"
-        />
+        <img id="company-logo" class="company-logo" src="app/style/graphics/logo.svg" alt="Logo" />
       </div>
 
       <div class="brand-content">
-        <p class="brand-description">
-          The World’s Largest Community of SaaS and AI Founders
-        </p>
-        <a
-          href="https://saasboomi.org/events/caravan-25/"
-          class="cta-button"
-          target="_blank"
-        >
-          Explore Caravan ‘25
-        </a>
+        <p class="brand-description">The World’s Largest Community of SaaS and AI Founders</p>
+        <a href="https://saasboomi.org/events/caravan-25/" class="cta-button" target="_blank"> Explore Caravan ‘25 </a>
       </div>
       <!-- New content block starts here -->
       <div class="how-to-win">
         <h2>How to Win</h2>
-        <p>
-          Play the Caravan ‘25 edition of our Pac-Man game from [date range], to
-          enter the top 10 leaderboard.
-        </p>
+        <p>Play the Caravan ‘25 edition of our Pac-Man game from [date range], to enter the top 10 leaderboard.</p>
 
         <div class="unlock-rewards">
           <h4>Unlock!</h4>
@@ -74,59 +46,33 @@
             <li>🥇 <strong>Rank 1</strong> → 100% off on your pass</li>
             <li>🥈 <strong>Rank 2</strong> → 50% off on your pass</li>
             <li>🥉 <strong>Rank 3</strong> → 25% off on your pass</li>
-            <li>
-              🏅 <strong>Rank 4 to 10</strong> → Exclusive Caravan '25 merch
-            </li>
+            <li>🏅 <strong>Rank 4 to 10</strong> → Exclusive Caravan '25 merch</li>
           </ul>
         </div>
 
-        <p class="note">
-          Valid only for members of the SaaSBoomi Compass community and curated
-          applicants with a valid payment link.
-        </p>
+        <p class="note">Valid only for members of the SaaSBoomi Compass community and curated applicants with a valid payment link.</p>
         <div class="eligibility-check">
-          <span class="tooltip-trigger"
-            >Check Eligibility
-            <img
-              id=""
-              class="question"
-              src="app/style/graphics/question.png"
-              alt="question"
-          /></span>
+          <span class="tooltip-trigger">Check Eligibility <img id="" class="question" src="app/style/graphics/question.png" alt="question" /></span>
           <div class="tooltip-content">
             <p>
-              You must be a SaaSBoomi Compass member or have passed Caravan
-              curation. Not a member? Join here. Winners will be contacted via
-              email. If a winner is not eligible, the next top scorer will take
-              their place.
+              You must be a SaaSBoomi Compass member or have passed Caravan curation. Not a member? Join here. Winners will be contacted via email. If a winner is not eligible, the next top scorer
+              will take their place.
             </p>
           </div>
         </div>
       </div>
     </div>
     <div id="overflow-mask" class="overflow-mask">
-      <img
-        id="backdrop"
-        class="backdrop"
-        src="app/style/graphics/backdrop.png"
-        alt="Backdrop"
-      />
+      <img id="backdrop" class="backdrop" src="app/style/graphics/backdrop.png" alt="Backdrop" />
 
       <div id="fps-display" class="fps-display"></div>
       <div id="preload-div" class="preload-div"></div>
 
       <div id="main-menu-container" class="main-menu-container">
-        <img
-          id="logo"
-          class="logo"
-          src="app/style/graphics/pacman_logo.png"
-          alt="Pacman Logo"
-        />
+        <img id="logo" class="logo" src="app/style/graphics/pacman_logo.png" alt="Pacman Logo" />
         <div class="sub-heading">
           <h2 style="color: black">THE AI MAZE</h2>
-          <h3 style="color: black">
-            Play. Score. Win your pass to Caravan ’25
-          </h3>
+          <h3 style="color: black">Play. Score. Win your pass to Caravan ’25</h3>
         </div>
         <button id="game-start" class="game-start">PLAY</button>
       </div>
@@ -158,12 +104,7 @@
         </div>
 
         <div id="maze" class="maze">
-          <img
-            id="maze-img"
-            class="maze-img"
-            src="app/style//graphics/spriteSheets/maze/maze_blue.svg"
-            alt="Maze"
-          />
+          <img id="maze-img" class="maze-img" src="app/style//graphics/spriteSheets/maze/maze_blue.svg" alt="Maze" />
           <div id="maze-cover" class="maze-cover"></div>
           <div id="dot-container"></div>
           <p id="pacman" class="pacman"></p>
@@ -234,27 +175,26 @@
       <script>
         // Mobile detection and popup functionality
         function isMobileDevice() {
-          return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) || 
-                 (window.innerWidth <= 768 && window.innerHeight <= 1024);
+          window.innerWidth <= 768 && window.innerHeight <= 1024;
         }
 
         function showMobilePopup() {
-          const popup = document.getElementById('mobile-desktop-popup');
-          const continueBtn = document.getElementById('continue-mobile');
-          
+          const popup = document.getElementById("mobile-desktop-popup");
+          const continueBtn = document.getElementById("continue-mobile");
+
           // Check if user has already dismissed the popup
-          if (localStorage.getItem('mobile-popup-dismissed') === 'true') {
+          if (localStorage.getItem("mobile-popup-dismissed") === "true") {
             return;
           }
-          
+
           if (isMobileDevice()) {
             setTimeout(() => {
-              popup.classList.add('show');
+              popup.classList.add("show");
             }, 1000); // Show after 1 second delay
-            
-            continueBtn.addEventListener('click', () => {
-              popup.classList.remove('show');
-              localStorage.setItem('mobile-popup-dismissed', 'true');
+
+            continueBtn.addEventListener("click", () => {
+              popup.classList.remove("show");
+              localStorage.setItem("mobile-popup-dismissed", "true");
             });
           }
         }
@@ -270,15 +210,9 @@
         <div class="terms-and-conditions">
           <h3>Terms and Conditions:</h3>
           <ul>
-            <li>
-              You must be a Compass member or have passed Caravan curation with
-              a valid payment link.
-            </li>
+            <li>You must be a Compass member or have passed Caravan curation with a valid payment link.</li>
             <li>Winners will be contacted via email.</li>
-            <li>
-              If a winner is not eligible, the next top scorer will take their
-              place.
-            </li>
+            <li>If a winner is not eligible, the next top scorer will take their place.</li>
           </ul>
         </div>
       </div>
