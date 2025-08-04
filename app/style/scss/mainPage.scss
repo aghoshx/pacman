@@ -1,4 +1,4 @@
-@import "variables";
+@use "variables";
 
 * {
   font-family: "Press Start 2P", sans-serif;
@@ -473,7 +473,7 @@ body {
   button {
     background: none;
     border: 0;
-    color: $white;
+    color: variables.$white;
     cursor: pointer;
     outline: none;
     padding: 0;
@@ -561,7 +561,7 @@ body {
 }
 
 .loading-cover {
-  background: $yellow;
+  background: variables.$yellow;
   height: 100vh;
   position: absolute;
   top: 0;
@@ -571,12 +571,12 @@ body {
 
 .left {
   left: 0;
-  transition: left $generic-duration ($generic-duration);
+  transition: left variables.$generic-duration (variables.$generic-duration);
 }
 
 .right {
   right: 0;
-  transition: right $generic-duration ($generic-duration);
+  transition: right variables.$generic-duration (variables.$generic-duration);
 }
 
 .main-menu-container {
@@ -610,11 +610,11 @@ body {
 }
 
 .game-start {
-  background-color: $logo-yellow;
-  border: ptr(5px) solid $logo-black;
+  background-color: variables.$logo-yellow;
+  border: ptr(5px) solid variables.$logo-black;
   border-radius: ptr(10px);
-  box-shadow: ptr(5px) ptr(5px) $logo-red;
-  color: $logo-black;
+  box-shadow: ptr(5px) ptr(5px) variables.$logo-red;
+  color: variables.$logo-black;
   cursor: pointer;
   font-size: ptr(48px);
   outline: none;

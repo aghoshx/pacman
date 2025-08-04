@@ -1,7 +1,7 @@
-@import 'variables';
+@use 'variables';
 
 .maze-cover {
-  background: $black;
+  background: variables.$black;
   height: 100%;
   position: absolute;
   visibility: hidden;

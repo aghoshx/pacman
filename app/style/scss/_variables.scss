@@ -1,6 +1,8 @@
 // Functions
-@function ptr($px) {
-  @return #{$px / 16}rem;
+@use 'sass:math';
+
+@function ptr($pxValue) {
+  @return math.div($pxValue, 16px) * 1rem;
 }
 
 // Animations
