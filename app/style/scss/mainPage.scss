@@ -6,7 +6,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: clamp(12px, 1.01137vw, 20px);
+  font-size: clamp(12px, 1.01137vw, 18px);
 }
 /* Layout styles for page-left, center content, and page-right with leaderboard */
 
@@ -198,16 +198,15 @@ body {
 /* Main game content - center area */
 .overflow-mask {
   flex: 1;
-  background-color: #000;
+  width: 100%;
   color: #fff;
   display: flex;
-  justify-content: center;
-  align-items: center;
   margin: 0 auto;
-  width: 100%;
-  max-width: ptr(900px);
   overflow: hidden;
   position: relative;
+  align-items: center;
+  justify-content: center;
+  background-color: #000;
   touch-action: manipulation;
 }
 
@@ -217,14 +216,14 @@ body {
 
 .page-right {
   width: 100%;
-  max-height: 100vh;
-  max-width: ptr(300px);
-  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
-  border-left: ptr(3px) solid #fcc73f;
-  padding: ptr(20px);
-  box-shadow: -ptr(5px) 0 ptr(20px) rgba(252, 199, 63, 0.2);
   overflow-y: auto;
+  max-height: 100vh;
+  padding: ptr(20px);
   position: relative;
+  max-width: ptr(300px);
+  border-left: ptr(3px) solid #fcc73f;
+  box-shadow: ptr(-5px) 0 ptr(20px) rgba(252, 199, 63, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
 
   /* Leaderboard Panel Styles */
   .leaderboard-panel {
@@ -232,30 +231,30 @@ body {
       h2 {
         color: #231f20;
         font-size: 1rem;
-        margin: 0 0 ptr(20px) 0;
         text-align: center;
+        margin: 0 0 ptr(20px) 0;
         text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.1);
       }
     }
 
     .panel-score-entry {
-      display: grid;
-      grid-template-columns: ptr(30px) 1fr ptr(80px);
-      gap: ptr(10px);
-      padding: ptr(8px) 0;
-      border-bottom: 1px solid #e0e0e0;
-      align-items: center;
-      font-size: 0.6rem;
       color: #333;
+      display: grid;
+      gap: ptr(10px);
+      font-size: 0.6rem;
+      padding: ptr(8px) 0;
+      align-items: center;
+      border-bottom: 1px solid #e0e0e0;
+      grid-template-columns: ptr(30px) 1fr ptr(80px);
 
       &:last-child {
         border-bottom: none;
       }
 
       &.first-place {
-        background: linear-gradient(90deg, rgba(252, 199, 63, 0.2) 0%, rgba(252, 199, 63, 0) 100%);
-        border-left: ptr(4px) solid #fcc73f;
         padding-left: ptr(6px);
+        border-left: ptr(4px) solid #fcc73f;
+        background: linear-gradient(90deg, rgba(252, 199, 63, 0.2) 0%, rgba(252, 199, 63, 0) 100%);
 
         .rank {
           color: #ee2a29;
@@ -375,13 +374,13 @@ body {
 
 @media only screen and (max-width: ptr(768px)) {
   body {
-    flex-direction: column;
+    display: block;
   }
 
   .page-right {
     width: 100%;
+    height: 50vh;
     max-width: 100%;
-    height: ptr(200px);
     border-left: none;
     border-top: ptr(3px) solid #fcc73f;
     box-shadow: 0 -ptr(5px) ptr(20px) rgba(252, 199, 63, 0.2);

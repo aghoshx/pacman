@@ -550,6 +550,9 @@ class LeaderboardUI {
             <label for="player-name">Enter Your Name:</label>
             <input type="text" id="player-name" maxlength="15" placeholder="Anonymous" />
           </div>
+          <div class="recaptcha-group">
+            <div id="recaptcha-container" class="g-recaptcha" data-sitekey="6LdbIporAAAAAOH0Ci6nGXjsVU53YiLkfE3pkt2N"></div>
+          </div>
         </div>
         <div class="name-input-footer">
           <button id="submit-score" class="submit-button">Submit Score</button>
@@ -706,6 +709,9 @@ class LeaderboardUI {
     setTimeout(() => {
       this.nameInputModal.classList.add('show');
       document.getElementById('player-name').focus();
+      
+      // Render reCAPTCHA when modal is shown
+      this.renderRecaptcha();
     }, 10);
 
     // Store score and level for submission
@@ -716,10 +722,58 @@ class LeaderboardUI {
   /**
    * Submit the score with the entered name
    */
-  submitScore(forceName = null) {
+  async submitScore(forceName = null) {
     const nameInput = document.getElementById('player-name');
     const playerName = forceName || nameInput.value.trim() || 'Anonymous';
 
+    // Remove any existing error messages
+    this.clearRecaptchaError();
+
+    // Skip reCAPTCHA for skip button (Anonymous users)
+    if (forceName === 'Anonymous') {
+      this.processScoreSubmission(playerName);
+      return;
+    }
+
+    // Verify reCAPTCHA
+    const recaptchaResponse = grecaptcha.getResponse();
+    if (!recaptchaResponse) {
+      this.showRecaptchaError('Please complete the reCAPTCHA verification.');
+      return;
+    }
+
+    // Disable submit button during verification
+    const submitButton = document.getElementById('submit-score');
+    const originalText = submitButton.textContent;
+    submitButton.disabled = true;
+    submitButton.textContent = 'Verifying...';
+
+    try {
+      // Verify reCAPTCHA with server
+      const isValid = await this.verifyRecaptcha(recaptchaResponse);
+      
+      if (isValid) {
+        this.processScoreSubmission(playerName);
+      } else {
+        this.showRecaptchaError('reCAPTCHA verification failed. Please try again.');
+        grecaptcha.reset();
+      }
+    } catch (error) {
+      console.error('reCAPTCHA verification error:', error);
+      this.showRecaptchaError('Verification failed. Please try again.');
+      grecaptcha.reset();
+    } finally {
+      // Re-enable submit button
+      submitButton.disabled = false;
+      submitButton.textContent = originalText;
+    }
+  }
+
+  /**
+   * Process the actual score submission after verification
+   */
+  processScoreSubmission(playerName) {
+    const nameInput = document.getElementById('player-name');
     const result = this.leaderboard.addScore(this.pendingScore, playerName, this.pendingLevel);
 
     // Hide name input modal
@@ -727,6 +781,10 @@ class LeaderboardUI {
     setTimeout(() => {
       this.nameInputModal.style.display = 'none';
       nameInput.value = '';
+      // Reset reCAPTCHA when modal closes
+      if (typeof grecaptcha !== 'undefined') {
+        grecaptcha.reset();
+      }
     }, 300);
 
     // Update the leaderboard panel immediately
@@ -786,6 +844,79 @@ class LeaderboardUI {
     if (ctaElement) {
       ctaElement.textContent = settings.ctaText;
       ctaElement.href = settings.ctaUrl;
+    }
+  }
+
+  /**
+   * Render reCAPTCHA widget
+   */
+  renderRecaptcha() {
+    if (typeof grecaptcha !== 'undefined' && grecaptcha.render) {
+      const recaptchaContainer = document.getElementById('recaptcha-container');
+      if (recaptchaContainer && !recaptchaContainer.hasChildNodes()) {
+        try {
+          grecaptcha.render('recaptcha-container', {
+            'sitekey': '6LdbIporAAAAAOH0Ci6nGXjsVU53YiLkfE3pkt2N'
+          });
+        } catch (error) {
+          console.error('Error rendering reCAPTCHA:', error);
+        }
+      }
+    } else {
+      // reCAPTCHA not loaded yet, try again after a short delay
+      setTimeout(() => this.renderRecaptcha(), 500);
+    }
+  }
+
+  /**
+   * Verify reCAPTCHA with server
+   */
+  async verifyRecaptcha(recaptchaResponse) {
+    try {
+      const response = await fetch('api/leaderboard-api.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'verify_recaptcha',
+          recaptcha_response: recaptchaResponse
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+
+      const data = await response.json();
+      return data.success === true;
+    } catch (error) {
+      console.error('reCAPTCHA verification error:', error);
+      return false;
+    }
+  }
+
+  /**
+   * Show reCAPTCHA error message
+   */
+  showRecaptchaError(message) {
+    this.clearRecaptchaError();
+    const recaptchaGroup = document.querySelector('.recaptcha-group');
+    if (recaptchaGroup) {
+      const errorDiv = document.createElement('div');
+      errorDiv.className = 'recaptcha-error';
+      errorDiv.textContent = message;
+      recaptchaGroup.appendChild(errorDiv);
+    }
+  }
+
+  /**
+   * Clear reCAPTCHA error message
+   */
+  clearRecaptchaError() {
+    const errorDiv = document.querySelector('.recaptcha-error');
+    if (errorDiv) {
+      errorDiv.remove();
     }
   }
 
