@@ -6,3 +6,4 @@ api/credentials.json
 api/.env
 *.log
 *.yaml
+/vendor
