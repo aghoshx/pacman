@@ -436,6 +436,8 @@ body {
 .backdrop {
   position: absolute;
   visibility: hidden;
+  max-width: 100vw;
+  max-height: 100vh;
 }
 
 .fps-display {
