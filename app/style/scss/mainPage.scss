@@ -161,22 +161,22 @@ body {
     font-size: ptr(15px);
   }
   .tooltip-content {
-    visibility: hidden;
+    left: 0px;
+    width: 90%;
     opacity: 0;
-    width: ptr(450px);
-    background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
-    color: #000000;
+    z-index: 9999;
+    top: ptr(-40px);
     text-align: left;
+    padding: ptr(8px);
+    color: #000000;
+    visibility: hidden;
+    position: absolute;
     border-radius: ptr(6px);
     border: 1px solid black;
-    padding: ptr(8px);
-    position: absolute;
-    top: 50%;
-    left: 100%;
     transform: translateY(-63%);
-    z-index: 9999;
     transition: opacity 0.3s ease;
     box-shadow: 0 2px ptr(8px) rgba(0, 0, 0, 0.2);
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
   }
   .tooltip-content p {
     margin-bottom: 0;
