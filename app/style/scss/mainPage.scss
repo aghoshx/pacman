@@ -630,6 +630,111 @@ body {
   }
 }
 
+/* Mobile desktop suggestion popup */
+.mobile-desktop-popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.9);
+  z-index: 2000;
+  justify-content: center;
+  align-items: center;
+  animation: fadeIn 0.3s ease;
+}
+
+.mobile-desktop-popup.show {
+  display: flex;
+}
+
+.mobile-popup-content {
+  background-color: #000;
+  border: ptr(5px) solid #2121ff;
+  border-radius: ptr(10px);
+  padding: ptr(30px) ptr(20px);
+  max-width: 90%;
+  text-align: center;
+  box-shadow: 0 0 ptr(20px) rgba(33, 33, 255, 0.5);
+  transform: scale(0.8);
+  transition: transform 0.3s ease;
+}
+
+.mobile-desktop-popup.show .mobile-popup-content {
+  transform: scale(1);
+}
+
+.mobile-popup-content h3 {
+  color: #ffdf00;
+  margin: 0 0 ptr(15px) 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: ptr(16px);
+  text-shadow: 2px 2px ptr(4px) rgba(0, 0, 0, 0.5);
+}
+
+.mobile-popup-content p {
+  color: #fff;
+  margin: 0 0 ptr(20px) 0;
+  font-family: 'Press Start 2P', monospace;
+  font-size: ptr(12px);
+  line-height: 1.5;
+}
+
+.mobile-popup-buttons {
+  display: flex;
+  gap: ptr(15px);
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.mobile-popup-button {
+  background-color: #fcc73f;
+  border: ptr(3px) solid #231f20;
+  border-radius: ptr(8px);
+  color: #231f20;
+  cursor: pointer;
+  font-family: 'Press Start 2P', monospace;
+  font-size: ptr(12px);
+  font-weight: bold;
+  padding: ptr(10px) ptr(15px);
+  transition: all 0.2s ease;
+  box-shadow: ptr(3px) ptr(3px) #ee2a29;
+}
+
+.mobile-popup-button:hover {
+  transform: translateY(ptr(-2px));
+  box-shadow: ptr(5px) ptr(5px) #ee2a29;
+}
+
+.mobile-popup-button:active {
+  transform: translateY(1px);
+  box-shadow: 1px 1px #ee2a29;
+}
+
+.mobile-popup-button.dismiss {
+  background-color: #666;
+  color: #fff;
+  box-shadow: ptr(3px) ptr(3px) #444;
+}
+
+.mobile-popup-button.dismiss:hover {
+  box-shadow: ptr(5px) ptr(5px) #444;
+}
+
+.mobile-popup-button.dismiss:active {
+  box-shadow: 1px 1px #444;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
 @media only screen and (max-width: ptr(600px)) {
   .game-start {
     scale: 0.5;
