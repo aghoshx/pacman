@@ -39,6 +39,11 @@ body {
   .brand-logo {
     text-align: center;
 
+    img {
+      display: block;
+      max-width: 100%;
+    }
+
     .brand-logo-icon {
       font-size: 4rem;
       margin-bottom: ptr(15px);
