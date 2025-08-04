@@ -1,5 +1,8 @@
+@use "_variables" as *;
+
 /* Leaderboard Modal Styles */
-.leaderboard-modal, .name-input-modal {
+.leaderboard-modal,
+.name-input-modal {
   display: none;
   position: fixed;
   top: 0;
@@ -14,11 +17,13 @@
   transition: opacity 0.3s ease;
 }
 
-.leaderboard-modal.show, .name-input-modal.show {
+.leaderboard-modal.show,
+.name-input-modal.show {
   opacity: 1;
 }
 
-.leaderboard-content, .name-input-content {
+.leaderboard-content,
+.name-input-content {
   background-color: #000;
   border: ptr(5px) solid #2121ff;
   border-radius: ptr(10px);
@@ -43,7 +48,8 @@
 }
 
 /* Header Styles */
-.leaderboard-header, .name-input-header {
+.leaderboard-header,
+.name-input-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -52,10 +58,11 @@
   padding-bottom: ptr(10px);
 }
 
-.leaderboard-header h2, .name-input-header h3 {
+.leaderboard-header h2,
+.name-input-header h3 {
   color: #ffdf00;
   margin: 0;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-weight: bold;
   text-shadow: 2px 2px ptr(4px) rgba(0, 0, 0, 0.5);
 }
@@ -66,8 +73,13 @@
 }
 
 @keyframes pulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
 }
 
 .close-button {
@@ -97,7 +109,7 @@
   padding: ptr(8px) 0;
   border-bottom: 1px solid #333;
   color: #fff;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   align-items: center;
 }
 
@@ -151,7 +163,7 @@
   color: #888;
   font-style: italic;
   padding: ptr(40px) ptr(20px);
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 /* Statistics Styles */
@@ -163,7 +175,7 @@
 .leaderboard-stats h4 {
   color: #ffdf00;
   margin: 0 0 ptr(10px) 0;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .stat-row {
@@ -171,7 +183,7 @@
   justify-content: space-between;
   padding: ptr(5px) 0;
   color: #fff;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
 }
 
 .stat-row span:last-child {
@@ -186,11 +198,12 @@
 
 .name-input-body p {
   color: #fff;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   margin: ptr(10px) 0;
 }
 
-#final-score, #final-level {
+#final-score,
+#final-level {
   color: #00ff00;
   font-weight: bold;
 }
@@ -209,7 +222,7 @@
 .input-group label {
   display: block;
   color: #ffdf00;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   margin-bottom: ptr(5px);
 }
 
@@ -220,7 +233,7 @@
   border-radius: ptr(5px);
   background-color: #000;
   color: #fff;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: ptr(16px);
   text-align: center;
 }
@@ -245,27 +258,30 @@
 
 .recaptcha-error {
   color: #ff4444;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: ptr(12px);
   text-align: center;
   margin-top: ptr(10px);
 }
 
 /* Button Styles */
-.leaderboard-footer, .name-input-footer {
+.leaderboard-footer,
+.name-input-footer {
   display: flex;
   justify-content: center;
   gap: ptr(15px);
   margin-top: ptr(20px);
 }
 
-.submit-button, .skip-button, .clear-button {
+.submit-button,
+.skip-button,
+.clear-button {
   background-color: #fcc73f;
   border: ptr(3px) solid #231f20;
   border-radius: ptr(8px);
   color: #231f20;
   cursor: pointer;
-  font-family: 'Courier New', monospace;
+  font-family: "Courier New", monospace;
   font-size: ptr(16px);
   font-weight: bold;
   padding: ptr(10px) ptr(20px);
@@ -273,12 +289,16 @@
   box-shadow: ptr(3px) ptr(3px) #ee2a29;
 }
 
-.submit-button:hover, .skip-button:hover, .clear-button:hover {
+.submit-button:hover,
+.skip-button:hover,
+.clear-button:hover {
   transform: translateY(-2px);
   box-shadow: ptr(5px) ptr(5px) #ee2a29;
 }
 
-.submit-button:active, .skip-button:active, .clear-button:active {
+.submit-button:active,
+.skip-button:active,
+.clear-button:active {
   transform: translateY(1px);
   box-shadow: 1px 1px #ee2a29;
 }
@@ -313,7 +333,8 @@
 
 /* Responsive Design */
 @media only screen and (max-width: ptr(600px)) {
-  .leaderboard-content, .name-input-content {
+  .leaderboard-content,
+  .name-input-content {
     width: 95%;
     padding: ptr(15px);
     border-width: ptr(3px);
@@ -337,7 +358,8 @@
     font-size: 1.1em;
   }
 
-  .leaderboard-footer, .name-input-footer {
+  .leaderboard-footer,
+  .name-input-footer {
     flex-direction: column;
     gap: ptr(10px);
   }
@@ -359,13 +381,33 @@
   animation: fadeInUp 0.3s ease forwards;
 }
 
-.score-entry:nth-child(1) { animation-delay: 0.1s; }
-.score-entry:nth-child(2) { animation-delay: 0.2s; }
-.score-entry:nth-child(3) { animation-delay: 0.3s; }
-.score-entry:nth-child(4) { animation-delay: 0.4s; }
-.score-entry:nth-child(5) { animation-delay: 0.5s; }
-.score-entry:nth-child(6) { animation-delay: 0.6s; }
-.score-entry:nth-child(7) { animation-delay: 0.7s; }
-.score-entry:nth-child(8) { animation-delay: 0.8s; }
-.score-entry:nth-child(9) { animation-delay: 0.9s; }
-.score-entry:nth-child(10) { animation-delay: 1.0s; }
+.score-entry:nth-child(1) {
+  animation-delay: 0.1s;
+}
+.score-entry:nth-child(2) {
+  animation-delay: 0.2s;
+}
+.score-entry:nth-child(3) {
+  animation-delay: 0.3s;
+}
+.score-entry:nth-child(4) {
+  animation-delay: 0.4s;
+}
+.score-entry:nth-child(5) {
+  animation-delay: 0.5s;
+}
+.score-entry:nth-child(6) {
+  animation-delay: 0.6s;
+}
+.score-entry:nth-child(7) {
+  animation-delay: 0.7s;
+}
+.score-entry:nth-child(8) {
+  animation-delay: 0.8s;
+}
+.score-entry:nth-child(9) {
+  animation-delay: 0.9s;
+}
+.score-entry:nth-child(10) {
+  animation-delay: 1s;
+}
