@@ -11,19 +11,26 @@
 
 require_once 'vendor/autoload.php';
 
-class ProductionGoogleSheetsAPI {
+class ProductionGoogleSheetsAPI
+{
     private $service;
     private $spreadsheetId;
     private $sheetName;
     private $rateLimiter;
-    
+
     public function __construct() {
         $this->loadConfig();
         $this->initGoogleSheets();
         $this->initRateLimiter();
         $this->setCorsHeaders();
     }
-    
+    private function initRateLimiter() {
+        $this->rateLimiter = [
+            'ip' => $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
+            'window' => 3600, // 1 hour
+            'max_requests' => 30, // Conservative for Google API limits
+        ];
+    }
     /**
      * Load configuration
      */
@@ -37,99 +44,99 @@ class ProductionGoogleSheetsAPI {
                 }
             }
         }
-        
+
         $this->spreadsheetId = '196hFMyXpn2Nqw6_XyS2Fzho1dwC7ONshiqcPG0MeP9E';
         $this->sheetName = $_ENV['SHEET_NAME'] ?? 'Sheet1';
-        
+
         $this->rateLimiter = [
             'ip' => $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
             'max_requests' => 30, // Conservative for Google API limits
             'window' => 3600 // 1 hour
         ];
     }
-    
+
     /**
      * Initialize Google Sheets service
      */
     private function initGoogleSheets() {
         try {
             $credentialsPath = __DIR__ . '/credentials.json';
-            
+
             if (!file_exists($credentialsPath)) {
                 throw new Exception('Google credentials file not found at: ' . $credentialsPath);
             }
-            
+
             $client = new Google_Client();
             $client->setAuthConfig($credentialsPath);
             $client->addScope(Google_Service_Sheets::SPREADSHEETS);
-            
+
             // Use service account authentication
             $client->useApplicationDefaultCredentials();
-            
+
             $this->service = new Google_Service_Sheets($client);
-            
+
         } catch (Exception $e) {
             error_log("Google Sheets initialization failed: " . $e->getMessage());
             throw new Exception('Failed to initialize Google Sheets service');
         }
     }
-    
+
     /**
      * Set CORS headers for specific domains
      */
     private function setCorsHeaders() {
         header('Content-Type: application/json; charset=utf-8');
-        
+
         $allowedOrigins = [
             'https://stg-saasboomiorg-staging.kinsta.cloud',
             'https://saasboomi.org'
         ];
-        
+
         $origin = $_SERVER['HTTP_ORIGIN'] ?? '';
         if (in_array($origin, $allowedOrigins)) {
             header("Access-Control-Allow-Origin: $origin");
         }
-        
+
         header('Access-Control-Allow-Methods: GET, POST, OPTIONS');
         header('Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With');
         header('Access-Control-Max-Age: 86400');
-        
+
         if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
             http_response_code(200);
             exit;
         }
     }
-    
+
     /**
      * Simple rate limiting
      */
     private function checkRateLimit() {
         $ip = $this->rateLimiter['ip'];
         $cacheFile = sys_get_temp_dir() . "/sheets_rate_limit_$ip.json";
-        
+
         $now = time();
         $requests = [];
-        
+
         if (file_exists($cacheFile)) {
             $data = json_decode(file_get_contents($cacheFile), true);
             $requests = $data['requests'] ?? [];
         }
-        
+
         // Remove old requests outside the window
-        $requests = array_filter($requests, function($timestamp) use ($now) {
+        $requests = array_filter($requests, function ($timestamp) use ($now) {
             return ($now - $timestamp) < $this->rateLimiter['window'];
         });
-        
+
         // Check if limit exceeded
         if (count($requests) >= $this->rateLimiter['max_requests']) {
             $this->sendError('Rate limit exceeded. Please try again later.', 429);
         }
-        
+
         // Add current request
         $requests[] = $now;
         file_put_contents($cacheFile, json_encode(['requests' => $requests]));
     }
-    
+
     /**
      * Main request handler
      */
@@ -137,7 +144,7 @@ class ProductionGoogleSheetsAPI {
         try {
             $action = $_GET['action'] ?? '';
             $method = $_SERVER['REQUEST_METHOD'];
-            
+
             switch (strtolower($action)) {
                 case 'submit':
                     if ($method !== 'POST') {
@@ -145,69 +152,69 @@ class ProductionGoogleSheetsAPI {
                     }
                     $this->submitScore();
                     break;
-                    
+
                 case 'leaderboard':
                     if ($method !== 'GET') {
                         $this->sendError('GET method required', 405);
                     }
                     $this->getLeaderboard();
                     break;
-                    
+
                 case 'top-player':
                     if ($method !== 'GET') {
                         $this->sendError('GET method required', 405);
                     }
                     $this->getTopPlayer();
                     break;
-                    
+
                 case 'stats':
                     if ($method !== 'GET') {
                         $this->sendError('GET method required', 405);
                     }
                     $this->getStats();
                     break;
-                    
+
                 case 'health':
                     $this->healthCheck();
                     break;
-                    
+
                 default:
                     $this->sendError('Invalid action', 400);
             }
-            
+
         } catch (Exception $e) {
             error_log("API Error: " . $e->getMessage());
             $this->sendError('Internal server error', 500);
         }
     }
-    
+
     /**
      * Submit score to Google Sheets
      */
     private function submitScore() {
         $this->checkRateLimit();
-        
+
         $input = json_decode(file_get_contents('php://input'), true);
         if (!$input || !isset($input['score'])) {
             $this->sendError('Invalid input', 400);
         }
-        
+
         // Validate and sanitize input
         $playerName = $this->sanitize($input['player_name'] ?? 'Anonymous');
         $email = $this->sanitize($input['email'] ?? '');
         $phone = $this->sanitize($input['phone'] ?? '');
         $score = (int) $input['score'];
         $level = (int) ($input['level'] ?? 1);
-        
+
         // Validate required fields
         if (!$email || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
             $this->sendError('Valid email is required', 400);
         }
-        
+
         if ($score < 0 || $score > 999999) {
             $this->sendError('Invalid score value', 400);
         }
-        
+
         try {
             // Prepare row data
             $rowData = [
@@ -220,30 +227,30 @@ class ProductionGoogleSheetsAPI {
                 $_SERVER['REMOTE_ADDR'] ?? '', // IP
                 $_SERVER['HTTP_USER_AGENT'] ?? '' // User Agent
             ];
-            
+
             // Append to Google Sheets
             $range = $this->sheetName . '!A:H';
             $values = [$rowData];
-            
+
             $body = new Google_Service_Sheets_ValueRange([
                 'values' => $values
             ]);
-            
+
             $params = [
                 'valueInputOption' => 'RAW'
             ];
-            
+
             $result = $this->service->spreadsheets_values->append(
                 $this->spreadsheetId,
                 $range,
                 $body,
                 $params
             );
-            
+
             // Calculate position and check if it's a new record
             $position = $this->calculatePosition($score);
             $isNewRecord = $this->isNewRecord($score);
-            
+
             $this->sendSuccess([
                 'id' => time(), // Use timestamp as ID for sheets
                 'player_name' => $playerName,
@@ -256,48 +263,49 @@ class ProductionGoogleSheetsAPI {
                 'is_new_record' => $isNewRecord,
                 'submitted_at' => date('Y-m-d H:i:s')
             ], 'Score submitted successfully');
-            
+
         } catch (Exception $e) {
             error_log("Sheet submission error: " . $e->getMessage());
             $this->sendError('Failed to submit score', 500);
         }
     }
-    
+
     /**
      * Get leaderboard from Google Sheets
      */
     private function getLeaderboard() {
         try {
             $limit = min((int) ($_GET['limit'] ?? 10), 50);
-            
+
             // Get all data from the sheet
             $range = $this->sheetName . '!A:H';
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
-            
+
             if (empty($values)) {
                 $this->sendSuccess([], 'Leaderboard retrieved successfully');
                 return;
             }
-            
+
             // Remove header row if it exists
             if (isset($values[0]) && !is_numeric($values[0][4] ?? '')) {
                 array_shift($values);
             }
-            
+
             // Sort by score (column E, index 4) descending
-            usort($values, function($a, $b) {
+            usort($values, function ($a, $b) {
                 $scoreA = (int) ($a[4] ?? 0);
                 $scoreB = (int) ($b[4] ?? 0);
                 return $scoreB - $scoreA;
             });
-            
+
             // Format response
             $scores = [];
             for ($i = 0; $i < min($limit, count($values)); $i++) {
                 $row = $values[$i];
-                if (empty($row) || !isset($row[4])) continue;
-                
+                if (empty($row) || !isset($row[4]))
+                    continue;
+
                 $scores[] = [
                     'position' => $i + 1,
                     'player_name' => $row[1] ?? 'Anonymous',
@@ -306,15 +314,15 @@ class ProductionGoogleSheetsAPI {
                     'achieved_at' => $row[0] ?? date('Y-m-d H:i:s')
                 ];
             }
-            
+
             $this->sendSuccess($scores, 'Leaderboard retrieved successfully');
-            
+
         } catch (Exception $e) {
             error_log("Leaderboard retrieval error: " . $e->getMessage());
             $this->sendError('Failed to retrieve leaderboard', 500);
         }
     }
-    
+
     /**
      * Get top player
      */
@@ -323,7 +331,7 @@ class ProductionGoogleSheetsAPI {
             $range = $this->sheetName . '!A:H';
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
-            
+
             if (empty($values)) {
                 $this->sendSuccess([
                     'top_player' => null,
@@ -333,12 +341,12 @@ class ProductionGoogleSheetsAPI {
                 ], 'Top player retrieved successfully');
                 return;
             }
-            
+
             // Remove header row if it exists
             if (isset($values[0]) && !is_numeric($values[0][4] ?? '')) {
                 array_shift($values);
             }
-            
+
             if (empty($values)) {
                 $this->sendSuccess([
                     'top_player' => null,
@@ -348,20 +356,21 @@ class ProductionGoogleSheetsAPI {
                 ], 'Top player retrieved successfully');
                 return;
             }
-            
+
             // Find highest score
             $topScore = 0;
             $topRow = null;
-            
+
             foreach ($values as $row) {
-                if (empty($row) || !isset($row[4])) continue;
+                if (empty($row) || !isset($row[4]))
+                    continue;
                 $score = (int) ($row[4] ?? 0);
                 if ($score > $topScore) {
                     $topScore = $score;
                     $topRow = $row;
                 }
             }
-            
+
             if ($topRow) {
                 $this->sendSuccess([
                     'top_player' => $topRow[1] ?? 'Anonymous',
@@ -377,13 +386,13 @@ class ProductionGoogleSheetsAPI {
                     'achieved_at' => null
                 ], 'Top player retrieved successfully');
             }
-            
+
         } catch (Exception $e) {
             error_log("Top player retrieval error: " . $e->getMessage());
             $this->sendError('Failed to retrieve top player', 500);
         }
     }
-    
+
     /**
      * Get statistics
      */
@@ -392,7 +401,7 @@ class ProductionGoogleSheetsAPI {
             $range = $this->sheetName . '!A:H';
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
-            
+
             if (empty($values)) {
                 $this->sendSuccess([
                     'total_scores' => 0,
@@ -404,26 +413,27 @@ class ProductionGoogleSheetsAPI {
                 ], 'Statistics retrieved successfully');
                 return;
             }
-            
+
             // Remove header row if it exists
             if (isset($values[0]) && !is_numeric($values[0][4] ?? '')) {
                 array_shift($values);
             }
-            
+
             $scores = [];
             $levels = [];
             $players = [];
-            
+
             foreach ($values as $row) {
-                if (empty($row) || !isset($row[4])) continue;
-                
+                if (empty($row) || !isset($row[4]))
+                    continue;
+
                 $scores[] = (int) ($row[4] ?? 0);
                 $levels[] = (int) ($row[5] ?? 1);
                 if (!empty($row[1])) {
                     $players[] = $row[1];
                 }
             }
-            
+
             $stats = [
                 'total_scores' => count($scores),
                 'highest_score' => count($scores) > 0 ? max($scores) : 0,
@@ -432,15 +442,15 @@ class ProductionGoogleSheetsAPI {
                 'unique_players' => count(array_unique($players)),
                 'active_days' => 1 // Simplified - could calculate from timestamps
             ];
-            
+
             $this->sendSuccess($stats, 'Statistics retrieved successfully');
-            
+
         } catch (Exception $e) {
             error_log("Statistics retrieval error: " . $e->getMessage());
             $this->sendError('Failed to retrieve statistics', 500);
         }
     }
-    
+
     /**
      * Health check
      */
@@ -453,12 +463,12 @@ class ProductionGoogleSheetsAPI {
             'storage' => 'Google Sheets',
             'spreadsheet_id' => $this->spreadsheetId
         ];
-        
+
         try {
             // Test connection to Google Sheets
             $range = $this->sheetName . '!A1:A1';
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
-            
+
             $health['google_sheets'] = [
                 'status' => 'connected',
                 'sheet_name' => $this->sheetName
@@ -470,11 +480,11 @@ class ProductionGoogleSheetsAPI {
             ];
             http_response_code(503);
         }
-        
+
         echo json_encode($health, JSON_PRETTY_PRINT);
         exit;
     }
-    
+
     /**
      * Calculate position for a score
      */
@@ -483,23 +493,25 @@ class ProductionGoogleSheetsAPI {
             $range = $this->sheetName . '!E:E'; // Score column
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
-            
-            if (empty($values)) return 1;
-            
+
+            if (empty($values))
+                return 1;
+
             $position = 1;
             foreach ($values as $row) {
-                if (empty($row[0]) || !is_numeric($row[0])) continue;
+                if (empty($row[0]) || !is_numeric($row[0]))
+                    continue;
                 if ((int) $row[0] > $score) {
                     $position++;
                 }
             }
-            
+
             return $position;
         } catch (Exception $e) {
             return 1; // Default position if calculation fails
         }
     }
-    
+
     /**
      * Check if score is a new record
      */
@@ -508,29 +520,31 @@ class ProductionGoogleSheetsAPI {
             $range = $this->sheetName . '!E:E'; // Score column
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
-            
-            if (empty($values)) return true;
-            
+
+            if (empty($values))
+                return true;
+
             foreach ($values as $row) {
-                if (empty($row[0]) || !is_numeric($row[0])) continue;
+                if (empty($row[0]) || !is_numeric($row[0]))
+                    continue;
                 if ((int) $row[0] >= $score) {
                     return false;
                 }
             }
-            
+
             return true;
         } catch (Exception $e) {
             return false; // Conservative approach if check fails
         }
     }
-    
+
     /**
      * Sanitize input
      */
     private function sanitize($input) {
         return htmlspecialchars(trim($input), ENT_QUOTES, 'UTF-8');
     }
-    
+
     /**
      * Send success response
      */
@@ -544,7 +558,7 @@ class ProductionGoogleSheetsAPI {
         ], JSON_PRETTY_PRINT);
         exit;
     }
-    
+
     /**
      * Send error response
      */

@@ -1,7 +1,7 @@
-@import 'variables';
+@import "variables";
 
 * {
-  font-family: 'Press Start 2P', sans-serif;
+  font-family: "Press Start 2P", sans-serif;
 }
 
 /* Layout styles for page-left, center content, and page-right with leaderboard */
@@ -13,7 +13,11 @@ body {
   overflow: hidden;
   background-color: #f8f9fa;
 }
-
+.page-left,
+.overflow-mask,
+.page-right {
+  overflow: visible !important;
+}
 .page-left {
   width: 100%;
   max-width: 300px;
@@ -30,7 +34,6 @@ body {
   /* Brand Logo Section */
   .brand-logo {
     text-align: center;
-    margin-bottom: 30px;
 
     .brand-logo-icon {
       font-size: 4rem;
@@ -60,6 +63,7 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    margin-bottom: 40px;
 
     .brand-description {
       font-size: 0.6rem;
@@ -97,6 +101,84 @@ body {
       }
     }
   }
+  .how-to-win h2 {
+    font-size: 1.2rem;
+    color: #000000;
+    line-height: 1.8;
+    margin: 0;
+  }
+  .how-to-win p {
+    font-size: 10px;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 20px;
+  }
+  .unlock-rewards h4 {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    margin-bottom: 0;
+  }
+  .unlock-rewards ul {
+    list-style: none;
+    padding-left: 0;
+    margin-top: 0;
+  }
+
+  .unlock-rewards li {
+    margin-bottom: 0.3rem;
+    font-size: 0.6rem;
+    color: #555;
+    line-height: 1.8;
+    margin: 20px 0;
+  }
+
+  .eligibility-check {
+    position: relative;
+    display: inline-block;
+  }
+
+  .tooltip-trigger {
+    cursor: pointer;
+    display: inline-flex; /* keeps image and text inline with tight wrap */
+    align-items: center;
+    gap: 4px; /* space between text and image */
+    border-radius: 4px;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  .tooltip-content {
+    visibility: hidden;
+    opacity: 0;
+    width: 450px;
+    background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
+    color: #000000;
+    text-align: left;
+    border-radius: 6px;
+    border: 1px solid black;
+    padding: 8px;
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    transform: translateY(-63%);
+    z-index: 9999;
+    transition: opacity 0.3s ease;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  }
+  .tooltip-content p {
+    margin-bottom: 0;
+    font-size: 0.5rem;
+  }
+  .tooltip-trigger img {
+    width: 35px;
+    height: 35px;
+    display: inline-block;
+    vertical-align: middle;
+  }
+
+  .eligibility-check:hover .tooltip-content {
+    visibility: visible;
+    opacity: 1;
+  }
 }
 
 /* Main game content - center area */
@@ -113,6 +195,10 @@ body {
   overflow: hidden;
   position: relative;
   touch-action: manipulation;
+}
+
+.sub-heading {
+  text-align: center;
 }
 
 .page-right {
@@ -152,7 +238,11 @@ body {
       }
 
       &.first-place {
-        background: linear-gradient(90deg, rgba(252, 199, 63, 0.2) 0%, rgba(252, 199, 63, 0) 100%);
+        background: linear-gradient(
+          90deg,
+          rgba(252, 199, 63, 0.2) 0%,
+          rgba(252, 199, 63, 0) 100%
+        );
         border-left: 4px solid #fcc73f;
         padding-left: 6px;
 
@@ -207,6 +297,33 @@ body {
         background-color: #cc2222;
         transform: translateY(-1px);
       }
+    }
+  }
+  .right-bottom {
+    margin-top: auto;
+
+    .terms-and-conditions h3 {
+      font-size: 14px;
+      color: #fcc73f;
+      line-height: 1.8;
+      margin-bottom: 6px;
+    }
+    .terms-and-conditions ul {
+      padding-left: 20px;
+      margin: 10px 0;
+    }
+
+    .terms-and-conditions li {
+      margin-bottom: 6px;
+      font-size: 0.6rem;
+      color: #f1f1f1;
+      line-height: 1.8;
+    }
+
+    .share-score a {
+      font-size: 0.6rem;
+      color: #f1f1f1;
+      line-height: 1.8;
     }
   }
 }
@@ -266,7 +383,8 @@ body {
 
 /* Pulse animation for the modal header */
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
   }
   50% {

@@ -90,6 +90,26 @@ class PageRightLeaderboardUI {
       </div>
     </div>
   </div>
+  <div class="right-bottom">
+        <div class="terms-and-conditions">
+          <h3>Terms and Conditions:</h3>
+          <ul>
+            <li>
+              You must be a Compass member or have passed Caravan curation with
+              a valid payment link.
+            </li>
+            <li>Winners will be contacted via email.</li>
+            <li>
+              If a winner is not eligible, the next top scorer will take their
+              place.
+            </li>
+          </ul>
+        </div>
+
+        <div class="share-score">
+         
+        </div>
+      </div>
 `;
   }
 
@@ -288,8 +308,10 @@ class PageRightLeaderboardUI {
    */
   async startAutoRefresh() {
     // Get config for refresh settings
-    const config = window.GameConfig || { leaderboard: { autoRefresh: true, refreshInterval: 30000 } };
-    
+    const config = window.GameConfig || {
+      leaderboard: { autoRefresh: true, refreshInterval: 30000 },
+    };
+
     // Wait for initial scores to load, then update displays
     await this.leaderboard.loadScores();
     this.updateLeaderboardPanel();
@@ -358,13 +380,16 @@ class PageRightLeaderboardUI {
                 overflow: hidden;
                 text-overflow: ellipsis;
                 white-space: nowrap;
-              ">${this.escapeHtml(score.player_name || score.name || 'Anonymous')}</div>
+              ">${this.escapeHtml(
+                score.player_name || score.name || "Anonymous"
+              )}</div>
               <div style="
                 text-align: right;
                 font-weight: bold;
                 color: #00ff00;
               ">${this.leaderboard.formatScore(score.score)}</div>
             </div>
+      
           `;
         })
         .join("");
@@ -439,17 +464,19 @@ class PageRightLeaderboardUI {
       name ||
       document.getElementById("player-name")?.value?.trim() ||
       "Anonymous";
-    
-    const email = document.getElementById("player-email")?.value?.trim() || null;
-    const phone = document.getElementById("player-phone")?.value?.trim() || null;
-    
+
+    const email =
+      document.getElementById("player-email")?.value?.trim() || null;
+    const phone =
+      document.getElementById("player-phone")?.value?.trim() || null;
+
     // Validate required fields
     if (!email) {
       alert("Email is required for winner notification!");
       document.getElementById("player-email")?.focus();
       return;
     }
-    
+
     // Basic email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
@@ -457,7 +484,7 @@ class PageRightLeaderboardUI {
       document.getElementById("player-email")?.focus();
       return;
     }
-    
+
     console.log("Final player info:", { playerName, email, phone });
 
     // Use the new method that checks for records
@@ -585,6 +612,28 @@ class PageRightLeaderboardUI {
       score
     )}!
     </div>
+    <div class="right-bottom">
+        <div class="terms-and-conditions">
+          <h3>Terms and Conditions:</h3>
+          <ul>
+            <li>
+              You must be a Compass member or have passed Caravan curation with
+              a valid payment link.
+            </li>
+            <li>Winners will be contacted via email.</li>
+            <li>
+              If a winner is not eligible, the next top scorer will take their
+              place.
+            </li>
+          </ul>
+        </div>
+
+        <div class="share-score">
+          <a href="" target="_blank" class="share-button">
+            Share my score! → Forward to LinkedIn post
+          </a>
+        </div>
+      </div>
   `;
 
     document.body.appendChild(celebration);
