@@ -374,7 +374,9 @@ body {
 
 @media only screen and (max-width: ptr(768px)) {
   body {
+    height: auto;
     display: block;
+    overflow: auto;
   }
 
   .page-right {
@@ -382,6 +384,7 @@ body {
     height: 50vh;
     max-width: 100%;
     border-left: none;
+    box-sizing: border-box;
     border-top: ptr(3px) solid #fcc73f;
     box-shadow: 0 -ptr(5px) ptr(20px) rgba(252, 199, 63, 0.2);
   }
