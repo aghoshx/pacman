@@ -867,24 +867,17 @@ class GameCoordinator {
   gameOver() {
     this.allowKeyPresses = false;
 
-    // Check if score qualifies for leaderboard
-    if (this.leaderboard.wouldMakeLeaderboard(this.points)) {
-      console.log('Score qualifies for leaderboard, showing name input');
-      // Show name input modal for high scores after a delay
-      setTimeout(() => {
-        if (this.leaderboardUI && this.leaderboardUI.showNameInput) {
-          this.leaderboardUI.showNameInput(this.points, this.level);
-        } else {
-          console.error('LeaderboardUI not properly initialized');
-          // Fallback: just add the score anonymously
-          this.leaderboard.addScore('Anonymous', this.points, this.level);
-        }
-      }, 2000); // Wait for game over animation
-    } else {
-      console.log('Score does not qualify, adding anonymously');
-      // Just add the score without name input
-      this.leaderboard.addScore('Anonymous', this.points, this.level);
-    }
+    // Always show name input modal for any score
+    console.log('Game over, showing name input for score:', this.points);
+    setTimeout(() => {
+      if (this.leaderboardUI && this.leaderboardUI.showNameInput) {
+        this.leaderboardUI.showNameInput(this.points, this.level);
+      } else {
+        console.error('LeaderboardUI not properly initialized');
+        // Fallback: just add the score anonymously
+        this.leaderboard.addScore('Anonymous', this.points, this.level);
+      }
+    }, 2000); // Wait for game over animation
 
     // Update high score display
     const newHighScore = this.leaderboard.getHighScore();

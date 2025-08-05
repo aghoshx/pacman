@@ -184,7 +184,7 @@ class PageRightLeaderboardUI {
               color: #ffdf00;
               margin-bottom: 5px;
             ">Email (for winner notification):</label>
-            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" required style="
+            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" style="
               width: 100%;
               padding: 10px;
               border: 2px solid #2121ff;
@@ -397,18 +397,10 @@ class PageRightLeaderboardUI {
   }
 
   /**
-   * Show name input modal when game ends with a qualifying score
+   * Show name input modal when game ends (for any score)
    */
   showNameInput(score, level) {
     console.log("showNameInput called with score:", score, "level:", level);
-
-    if (!this.leaderboard.wouldMakeLeaderboard(score)) {
-      console.log("Score does not qualify for leaderboard");
-      // Just add the score without showing the modal
-      this.leaderboard.addScore(score, "Anonymous", level);
-      this.updateLeaderboardPanel();
-      return;
-    }
 
     // Calculate position without saving to database
     const positionInfo = this.leaderboard.calculatePosition(score);
@@ -424,11 +416,21 @@ class PageRightLeaderboardUI {
       } else {
         positionElement.textContent = `New #${positionInfo.position} high score!`;
       }
-      positionElement.classList.remove('game-element-hidden');
-      positionElement.classList.add('game-element-visible');
     } else {
-      positionElement.classList.remove('game-element-visible');
-      positionElement.classList.add('game-element-hidden');
+      positionElement.textContent = `Your score: ${this.leaderboard.formatScore(score)} points!`;
+    }
+    positionElement.classList.remove('game-element-hidden');
+    positionElement.classList.add('game-element-visible');
+
+    // Update email label based on leaderboard qualification
+    const emailLabel = document.querySelector('label[for="player-email"]');
+    const emailInput = document.getElementById('player-email');
+    if (positionInfo.madeLeaderboard) {
+      emailLabel.textContent = "Email (required for winner notification):";
+      emailInput.setAttribute('required', 'required');
+    } else {
+      emailLabel.textContent = "Email (optional):";
+      emailInput.removeAttribute('required');
     }
 
     this.nameInputModal.classList.add('modal-flex-display');
@@ -474,19 +476,24 @@ class PageRightLeaderboardUI {
     const phone =
       document.getElementById("player-phone")?.value?.trim() || null;
 
+    // Check if this score would make the leaderboard to determine email requirement
+    const wouldMakeLeaderboard = this.leaderboard.wouldMakeLeaderboard(this.pendingScore.score);
+    
     // Validate required fields
-    if (!email) {
-      alert("Email is required for winner notification!");
+    if (wouldMakeLeaderboard && !email) {
+      alert("Email is required for leaderboard entries (winner notification)!");
       document.getElementById("player-email")?.focus();
       return;
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address!");
-      document.getElementById("player-email")?.focus();
-      return;
+    // Basic email validation (only if email is provided)
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address!");
+        document.getElementById("player-email")?.focus();
+        return;
+      }
     }
 
     console.log("Final player info:", { playerName, email, phone });

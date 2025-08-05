@@ -258,17 +258,9 @@ class LeaderboardUI {
   }
 
   /**
-   * Show the name input modal for a new high score
+   * Show the name input modal for any score
    */
   showNameInput(score, level) {
-    // Check if score would make the leaderboard
-    if (!this.leaderboard.wouldMakeLeaderboard(score)) {
-      // Score doesn't make leaderboard, just add it
-      this.leaderboard.addScore(score, 'Anonymous', level);
-      this.updateLeaderboardPanel();
-      return;
-    }
-
     document.getElementById('final-score').textContent = this.leaderboard.formatScore(score);
     document.getElementById('final-level').textContent = level;
 
