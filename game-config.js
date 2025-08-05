@@ -11,19 +11,19 @@
 // Environment-specific configuration
 const ENVIRONMENT_CONFIGS = {
   development: {
-    API_URL: '/api/leaderboard-api.php',
+    API_URL: './api',
     DEBUG_MODE: true,
     REFRESH_INTERVAL_MS: 10000 // Faster refresh in dev
   },
   
   staging: {
-    API_URL: 'https://dev.matsio.com/game-api',
+    API_URL: './api',
     DEBUG_MODE: true,
     REFRESH_INTERVAL_MS: 15000
   },
   
   production: {
-    API_URL: 'https://dev.matsio.com/game-api',
+    API_URL: './api',
     DEBUG_MODE: false,
     REFRESH_INTERVAL_MS: 30000
   }
