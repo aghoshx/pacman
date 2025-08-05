@@ -184,7 +184,7 @@ class PageRightLeaderboardUI {
               color: #ffdf00;
               margin-bottom: 5px;
             ">Email (for winner notification):</label>
-            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" style="
+            <input type="email" id="player-email" maxlength="255" required placeholder="your@email.com" style="
               width: 100%;
               padding: 10px;
               border: 2px solid #2121ff;
@@ -202,8 +202,8 @@ class PageRightLeaderboardUI {
               display: block;
               color: #ffdf00;
               margin-bottom: 5px;
-            ">Phone (optional):</label>
-            <input type="tel" id="player-phone" maxlength="20" placeholder="+1 123 456 7890" style="
+            ">Phone:</label>
+            <input type="tel" id="player-phone" maxlength="20" required placeholder="+1 123 456 7890" style="
               width: 100%;
               padding: 10px;
               border: 2px solid #2121ff;
