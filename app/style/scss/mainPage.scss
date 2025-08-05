@@ -389,6 +389,7 @@ body {
   .overflow-mask {
     flex: 1;
     max-width: none;
+    min-height: 80vh;
   }
 }
 
@@ -833,6 +834,10 @@ body {
 }
 
 @keyframes glow {
-  from { text-shadow: 0 0 ptr(5px) #fcc73f; }
-  to { text-shadow: 0 0 ptr(20px) #fcc73f, 0 0 ptr(30px) #fcc73f; }
+  from {
+    text-shadow: 0 0 ptr(5px) #fcc73f;
+  }
+  to {
+    text-shadow: 0 0 ptr(20px) #fcc73f, 0 0 ptr(30px) #fcc73f;
+  }
 }
