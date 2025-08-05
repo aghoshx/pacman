@@ -10,20 +10,20 @@
 -->
 
 <script>
-// Global Game Configuration Override
-window.GAME_CONFIG = {
-  // API Configuration
-  API_URL: 'https://dev.matsio.com/game-api',
-  
-  // Leaderboard Settings
-  MAX_LEADERBOARD_ENTRIES: 10,
-  AUTO_REFRESH_ENABLED: true,
-  REFRESH_INTERVAL_MS: 30000, // 30 seconds
-  
-  // Debug Settings
-  DEBUG_MODE: false,
-  ENABLE_ANALYTICS: true
-};
+  // Global Game Configuration Override
+  window.GAME_CONFIG = {
+    // API Configuration
+    API_URL: "./api/",
 
-console.log('🎮 Game configuration loaded:', window.GAME_CONFIG);
+    // Leaderboard Settings
+    MAX_LEADERBOARD_ENTRIES: 10,
+    AUTO_REFRESH_ENABLED: true,
+    REFRESH_INTERVAL_MS: 30000, // 30 seconds
+
+    // Debug Settings
+    DEBUG_MODE: false,
+    ENABLE_ANALYTICS: true,
+  };
+
+  console.log("🎮 Game configuration loaded:", window.GAME_CONFIG);
 </script>

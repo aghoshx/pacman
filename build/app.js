@@ -142,10 +142,10 @@ window.GameConfig = gameConfig;
 class Leaderboard {
   constructor(apiUrl = null) {
     // Use config system for settings
-    const config = window.GameConfig || { api: { baseUrl: "https://dev.matsio.com/game-api" }, leaderboard: { maxEntries: 10 } };
+    const config = window.GAME_CONFIG || { API_URL: "./api", MAX_LEADERBOARD_ENTRIES: 10 };
     
-    this.maxEntries = config.leaderboard.maxEntries;
-    this.apiUrl = apiUrl || config.api.baseUrl;
+    this.maxEntries = config.MAX_LEADERBOARD_ENTRIES;
+    this.apiUrl = apiUrl || config.API_URL;
     this.scores = [];
     
     // Load scores from database on initialization
@@ -684,17 +684,9 @@ class LeaderboardUI {
   }
 
   /**
-   * Show the name input modal for a new high score
+   * Show the name input modal for any score
    */
   showNameInput(score, level) {
-    // Check if score would make the leaderboard
-    if (!this.leaderboard.wouldMakeLeaderboard(score)) {
-      // Score doesn't make leaderboard, just add it
-      this.leaderboard.addScore(score, 'Anonymous', level);
-      this.updateLeaderboardPanel();
-      return;
-    }
-
     document.getElementById('final-score').textContent = this.leaderboard.formatScore(score);
     document.getElementById('final-level').textContent = level;
 
@@ -705,8 +697,7 @@ class LeaderboardUI {
     // Remove the temporary entry
     this.leaderboard.scores = this.leaderboard.scores.filter((s) => (s.player_name || s.name) !== 'TEMP');
 
-    this.nameInputModal.classList.add('modal-flex-display');
-    this.nameInputModal.classList.remove('modal-none-display');
+    this.nameInputModal.style.display = 'flex';
     setTimeout(() => {
       this.nameInputModal.classList.add('show');
       document.getElementById('player-name').focus();
@@ -780,8 +771,7 @@ class LeaderboardUI {
     // Hide name input modal
     this.nameInputModal.classList.remove('show');
     setTimeout(() => {
-      this.nameInputModal.classList.add('modal-none-display');
-      this.nameInputModal.classList.remove('modal-flex-display');
+      this.nameInputModal.style.display = 'none';
       nameInput.value = '';
       // Reset reCAPTCHA when modal closes
       if (typeof grecaptcha !== 'undefined') {
@@ -1119,7 +1109,7 @@ class PageRightLeaderboardUI {
               color: #ffdf00;
               margin-bottom: 5px;
             ">Email (for winner notification):</label>
-            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" required style="
+            <input type="email" id="player-email" maxlength="255" placeholder="your@email.com" style="
               width: 100%;
               padding: 10px;
               border: 2px solid #2121ff;
@@ -1243,8 +1233,9 @@ class PageRightLeaderboardUI {
    */
   async startAutoRefresh() {
     // Get config for refresh settings
-    const config = window.GameConfig || {
-      leaderboard: { autoRefresh: true, refreshInterval: 30000 },
+    const config = window.GAME_CONFIG || {
+      AUTO_REFRESH_ENABLED: true, 
+      REFRESH_INTERVAL_MS: 30000,
     };
 
     // Wait for initial scores to load, then update displays
@@ -1253,12 +1244,12 @@ class PageRightLeaderboardUI {
     this.updateGlobalChampion();
 
     // Auto-refresh based on config
-    if (config.leaderboard.autoRefresh) {
+    if (config.AUTO_REFRESH_ENABLED) {
       setInterval(async () => {
         await this.leaderboard.loadScores();
         this.updateLeaderboardPanel();
         this.updateGlobalChampion();
-      }, config.leaderboard.refreshInterval);
+      }, config.REFRESH_INTERVAL_MS);
     }
   }
 
@@ -1332,18 +1323,10 @@ class PageRightLeaderboardUI {
   }
 
   /**
-   * Show name input modal when game ends with a qualifying score
+   * Show name input modal when game ends (for any score)
    */
   showNameInput(score, level) {
     console.log("showNameInput called with score:", score, "level:", level);
-
-    if (!this.leaderboard.wouldMakeLeaderboard(score)) {
-      console.log("Score does not qualify for leaderboard");
-      // Just add the score without showing the modal
-      this.leaderboard.addScore(score, "Anonymous", level);
-      this.updateLeaderboardPanel();
-      return;
-    }
 
     // Calculate position without saving to database
     const positionInfo = this.leaderboard.calculatePosition(score);
@@ -1359,15 +1342,24 @@ class PageRightLeaderboardUI {
       } else {
         positionElement.textContent = `New #${positionInfo.position} high score!`;
       }
-      positionElement.classList.remove('game-element-hidden');
-      positionElement.classList.add('game-element-visible');
     } else {
-      positionElement.classList.remove('game-element-visible');
-      positionElement.classList.add('game-element-hidden');
+      positionElement.textContent = `Your score: ${this.leaderboard.formatScore(score)} points!`;
+    }
+    positionElement.classList.remove('game-element-hidden');
+    positionElement.classList.add('game-element-visible');
+
+    // Update email label based on leaderboard qualification
+    const emailLabel = document.querySelector('label[for="player-email"]');
+    const emailInput = document.getElementById('player-email');
+    if (positionInfo.madeLeaderboard) {
+      emailLabel.textContent = "Email (required for winner notification):";
+      emailInput.setAttribute('required', 'required');
+    } else {
+      emailLabel.textContent = "Email (optional):";
+      emailInput.removeAttribute('required');
     }
 
-    this.nameInputModal.classList.add('modal-flex-display');
-    this.nameInputModal.classList.remove('modal-none-display');
+    this.nameInputModal.style.display = "flex";
     // Note: opacity and transform are kept as inline styles since they're part of animation sequence
     setTimeout(() => {
       this.nameInputModal.style.opacity = "1";
@@ -1409,19 +1401,24 @@ class PageRightLeaderboardUI {
     const phone =
       document.getElementById("player-phone")?.value?.trim() || null;
 
+    // Check if this score would make the leaderboard to determine email requirement
+    const wouldMakeLeaderboard = this.leaderboard.wouldMakeLeaderboard(this.pendingScore.score);
+    
     // Validate required fields
-    if (!email) {
-      alert("Email is required for winner notification!");
+    if (wouldMakeLeaderboard && !email) {
+      alert("Email is required for leaderboard entries (winner notification)!");
       document.getElementById("player-email")?.focus();
       return;
     }
 
-    // Basic email validation
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      alert("Please enter a valid email address!");
-      document.getElementById("player-email")?.focus();
-      return;
+    // Basic email validation (only if email is provided)
+    if (email) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email)) {
+        alert("Please enter a valid email address!");
+        document.getElementById("player-email")?.focus();
+        return;
+      }
     }
 
     console.log("Final player info:", { playerName, email, phone });
@@ -1459,8 +1456,7 @@ class PageRightLeaderboardUI {
       "scale(0.8)";
 
     setTimeout(() => {
-      this.nameInputModal.classList.add('modal-none-display');
-      this.nameInputModal.classList.remove('modal-flex-display');
+      this.nameInputModal.style.display = "none";
       document.getElementById("player-name").value = "";
       document.getElementById("player-email").value = "";
       document.getElementById("player-phone").value = "";
@@ -3584,24 +3580,17 @@ class GameCoordinator {
   gameOver() {
     this.allowKeyPresses = false;
 
-    // Check if score qualifies for leaderboard
-    if (this.leaderboard.wouldMakeLeaderboard(this.points)) {
-      console.log('Score qualifies for leaderboard, showing name input');
-      // Show name input modal for high scores after a delay
-      setTimeout(() => {
-        if (this.leaderboardUI && this.leaderboardUI.showNameInput) {
-          this.leaderboardUI.showNameInput(this.points, this.level);
-        } else {
-          console.error('LeaderboardUI not properly initialized');
-          // Fallback: just add the score anonymously
-          this.leaderboard.addScore('Anonymous', this.points, this.level);
-        }
-      }, 2000); // Wait for game over animation
-    } else {
-      console.log('Score does not qualify, adding anonymously');
-      // Just add the score without name input
-      this.leaderboard.addScore('Anonymous', this.points, this.level);
-    }
+    // Always show name input modal for any score
+    console.log('Game over, showing name input for score:', this.points);
+    setTimeout(() => {
+      if (this.leaderboardUI && this.leaderboardUI.showNameInput) {
+        this.leaderboardUI.showNameInput(this.points, this.level);
+      } else {
+        console.error('LeaderboardUI not properly initialized');
+        // Fallback: just add the score anonymously
+        this.leaderboard.addScore('Anonymous', this.points, this.level);
+      }
+    }, 2000); // Wait for game over animation
 
     // Update high score display
     const newHighScore = this.leaderboard.getHighScore();
