@@ -308,8 +308,9 @@ class PageRightLeaderboardUI {
    */
   async startAutoRefresh() {
     // Get config for refresh settings
-    const config = window.GameConfig || {
-      leaderboard: { autoRefresh: true, refreshInterval: 30000 },
+    const config = window.GAME_CONFIG || {
+      AUTO_REFRESH_ENABLED: true, 
+      REFRESH_INTERVAL_MS: 30000,
     };
 
     // Wait for initial scores to load, then update displays
@@ -318,12 +319,12 @@ class PageRightLeaderboardUI {
     this.updateGlobalChampion();
 
     // Auto-refresh based on config
-    if (config.leaderboard.autoRefresh) {
+    if (config.AUTO_REFRESH_ENABLED) {
       setInterval(async () => {
         await this.leaderboard.loadScores();
         this.updateLeaderboardPanel();
         this.updateGlobalChampion();
-      }, config.leaderboard.refreshInterval);
+      }, config.REFRESH_INTERVAL_MS);
     }
   }
 
@@ -433,8 +434,7 @@ class PageRightLeaderboardUI {
       emailInput.removeAttribute('required');
     }
 
-    this.nameInputModal.classList.add('modal-flex-display');
-    this.nameInputModal.classList.remove('modal-none-display');
+    this.nameInputModal.style.display = "flex";
     // Note: opacity and transform are kept as inline styles since they're part of animation sequence
     setTimeout(() => {
       this.nameInputModal.style.opacity = "1";
@@ -531,8 +531,7 @@ class PageRightLeaderboardUI {
       "scale(0.8)";
 
     setTimeout(() => {
-      this.nameInputModal.classList.add('modal-none-display');
-      this.nameInputModal.classList.remove('modal-flex-display');
+      this.nameInputModal.style.display = "none";
       document.getElementById("player-name").value = "";
       document.getElementById("player-email").value = "";
       document.getElementById("player-phone").value = "";

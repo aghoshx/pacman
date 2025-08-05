@@ -271,8 +271,7 @@ class LeaderboardUI {
     // Remove the temporary entry
     this.leaderboard.scores = this.leaderboard.scores.filter((s) => (s.player_name || s.name) !== 'TEMP');
 
-    this.nameInputModal.classList.add('modal-flex-display');
-    this.nameInputModal.classList.remove('modal-none-display');
+    this.nameInputModal.style.display = 'flex';
     setTimeout(() => {
       this.nameInputModal.classList.add('show');
       document.getElementById('player-name').focus();
@@ -346,8 +345,7 @@ class LeaderboardUI {
     // Hide name input modal
     this.nameInputModal.classList.remove('show');
     setTimeout(() => {
-      this.nameInputModal.classList.add('modal-none-display');
-      this.nameInputModal.classList.remove('modal-flex-display');
+      this.nameInputModal.style.display = 'none';
       nameInput.value = '';
       // Reset reCAPTCHA when modal closes
       if (typeof grecaptcha !== 'undefined') {
