@@ -175,7 +175,7 @@
       <script>
         // Mobile detection and popup functionality
         function isMobileDevice() {
-          window.innerWidth <= 768 && window.innerHeight <= 1024;
+          return window.innerWidth <= 768 || window.innerHeight <= 1024;
         }
 
         function showMobilePopup() {
@@ -202,6 +202,11 @@
         window.onload = () => {
           let gameCoordinator = new GameCoordinator();
           showMobilePopup();
+          
+          // Handle window resize events
+          window.addEventListener('resize', () => {
+            showMobilePopup();
+          });
         };
       </script>
     </div>
