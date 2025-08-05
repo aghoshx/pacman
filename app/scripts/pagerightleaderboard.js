@@ -430,8 +430,7 @@ class PageRightLeaderboardUI {
       emailLabel.textContent = "Email (required for winner notification):";
       emailInput.setAttribute('required', 'required');
     } else {
-      emailLabel.textContent = "Email (optional):";
-      emailInput.removeAttribute('required');
+      emailLabel.textContent = "Email:";
     }
 
     this.nameInputModal.style.display = "flex";
