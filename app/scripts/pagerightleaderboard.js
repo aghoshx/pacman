@@ -164,7 +164,7 @@ class PageRightLeaderboardUI {
               display: block;
               color: #ffdf00;
               margin-bottom: 5px;
-            ">Enter Your Name:</label>
+            ">Enter Your Name (required):</label>
             <input type="text" id="player-name" maxlength="50" placeholder="Your name" required style="
               width: 100%;
               padding: 10px;
@@ -183,7 +183,7 @@ class PageRightLeaderboardUI {
               display: block;
               color: #ffdf00;
               margin-bottom: 5px;
-            ">Email (for winner notification):</label>
+            ">Email (required):</label>
             <input type="email" id="player-email" maxlength="255" required placeholder="your@email.com" style="
               width: 100%;
               padding: 10px;
@@ -202,7 +202,7 @@ class PageRightLeaderboardUI {
               display: block;
               color: #ffdf00;
               margin-bottom: 5px;
-            ">Phone:</label>
+            ">Phone (required):</label>
             <input type="tel" id="player-phone" maxlength="20" required placeholder="+1 123 456 7890" style="
               width: 100%;
               padding: 10px;
@@ -289,8 +289,11 @@ class PageRightLeaderboardUI {
         }
       });
 
-    // Style input focus
+    // Style input focus and clear validation errors on input
     const playerNameInput = document.getElementById("player-name");
+    const playerEmailInput = document.getElementById("player-email");
+    const playerPhoneInput = document.getElementById("player-phone");
+
     if (playerNameInput) {
       playerNameInput.addEventListener("focus", () => {
         playerNameInput.classList.add("input-highlight-yellow");
@@ -299,6 +302,21 @@ class PageRightLeaderboardUI {
       playerNameInput.addEventListener("blur", () => {
         playerNameInput.classList.add("input-highlight-blue");
         playerNameInput.classList.remove("input-highlight-yellow");
+      });
+      playerNameInput.addEventListener("input", () => {
+        this.clearFieldValidationError("player-name");
+      });
+    }
+
+    if (playerEmailInput) {
+      playerEmailInput.addEventListener("input", () => {
+        this.clearFieldValidationError("player-email");
+      });
+    }
+
+    if (playerPhoneInput) {
+      playerPhoneInput.addEventListener("input", () => {
+        this.clearFieldValidationError("player-phone");
       });
     }
   }
@@ -423,15 +441,6 @@ class PageRightLeaderboardUI {
     positionElement.classList.remove('game-element-hidden');
     positionElement.classList.add('game-element-visible');
 
-    // Update email label based on leaderboard qualification
-    const emailLabel = document.querySelector('label[for="player-email"]');
-    const emailInput = document.getElementById('player-email');
-    if (positionInfo.madeLeaderboard) {
-      emailLabel.textContent = "Email (required for winner notification):";
-      emailInput.setAttribute('required', 'required');
-    } else {
-      emailLabel.textContent = "Email:";
-    }
 
     this.nameInputModal.style.display = "flex";
     // Note: opacity and transform are kept as inline styles since they're part of animation sequence
@@ -475,24 +484,30 @@ class PageRightLeaderboardUI {
     const phone =
       document.getElementById("player-phone")?.value?.trim() || null;
 
-    // Check if this score would make the leaderboard to determine email requirement
-    const wouldMakeLeaderboard = this.leaderboard.wouldMakeLeaderboard(this.pendingScore.score);
-    
-    // Validate required fields
-    if (wouldMakeLeaderboard && !email) {
-      alert("Email is required for leaderboard entries (winner notification)!");
-      document.getElementById("player-email")?.focus();
+    // Clear any existing error messages
+    this.clearValidationErrors();
+
+    // Validate required fields - name, email, and phone are now required for all submissions
+    if (!playerName || playerName === "Anonymous") {
+      this.showValidationError("player-name", "Name is required for score submission!");
       return;
     }
 
-    // Basic email validation (only if email is provided)
-    if (email) {
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email)) {
-        alert("Please enter a valid email address!");
-        document.getElementById("player-email")?.focus();
-        return;
-      }
+    if (!email) {
+      this.showValidationError("player-email", "Email is required for score submission!");
+      return;
+    }
+
+    if (!phone) {
+      this.showValidationError("player-phone", "Phone number is required for score submission!");
+      return;
+    }
+
+    // Email validation
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email)) {
+      this.showValidationError("player-email", "Please enter a valid email address!");
+      return;
     }
 
     console.log("Final player info:", { playerName, email, phone });
@@ -591,6 +606,79 @@ class PageRightLeaderboardUI {
       championName.textContent = "Loading...";
       championScore.textContent = "-";
     }
+  }
+
+  /**
+   * Show validation error message
+   */
+  showValidationError(inputId, message) {
+    const inputElement = document.getElementById(inputId);
+    if (!inputElement) return;
+
+    // Remove any existing error message for this input
+    const existingError = inputElement.parentNode.querySelector('.validation-error');
+    if (existingError) {
+      existingError.remove();
+    }
+
+    // Create error message element
+    const errorElement = document.createElement('div');
+    errorElement.className = 'validation-error';
+    errorElement.style.cssText = `
+      color: #ff4444;
+      font-size: 12px;
+      margin-top: 5px;
+      font-family: 'Courier New', monospace;
+      text-align: center;
+    `;
+    errorElement.textContent = message;
+
+    // Add error styling to input
+    inputElement.style.borderColor = '#ff4444';
+    inputElement.style.boxShadow = '0 0 5px rgba(255, 68, 68, 0.5)';
+
+    // Insert error message after the input
+    inputElement.parentNode.insertBefore(errorElement, inputElement.nextSibling);
+
+    // Focus on the input
+    inputElement.focus();
+  }
+
+  /**
+   * Clear all validation errors
+   */
+  clearValidationErrors() {
+    // Remove all error messages
+    const errorMessages = document.querySelectorAll('.validation-error');
+    errorMessages.forEach(error => error.remove());
+
+    // Reset input styling
+    const inputs = ['player-name', 'player-email', 'player-phone'];
+    inputs.forEach(inputId => {
+      const input = document.getElementById(inputId);
+      if (input) {
+        input.style.borderColor = '#2121ff';
+        input.style.boxShadow = '';
+      }
+    });
+  }
+
+  /**
+   * Clear validation error for a specific field
+   */
+  clearFieldValidationError(inputId) {
+    const inputElement = document.getElementById(inputId);
+    if (!inputElement) return;
+
+    // Remove existing error message for this input
+    const existingError = inputElement.parentNode.querySelector('.validation-error');
+    if (existingError) {
+      existingError.remove();
+    }
+
+    // Reset input styling
+    inputElement.style.borderColor = '#2121ff';
+    inputElement.style.boxShadow = '';
   }
 
   /**

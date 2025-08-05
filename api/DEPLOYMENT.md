@@ -13,7 +13,7 @@ Professional deployment checklist for the consolidated Leaderboard API.
 
 ### ✅ File Structure
 ```
-/game-api/
+
 ├── index.php           # Clean URL router
 ├── leaderboard-api.php # Main API (protected by .htaccess)
 ├── .htaccess          # Security & URL rewriting
@@ -30,7 +30,7 @@ Professional deployment checklist for the consolidated Leaderboard API.
 # Set secure file permissions
 chmod 644 index.php leaderboard-api.php .htaccess README.md
 chmod 600 .env  # Most restrictive for sensitive config
-chmod 755 /game-api/  # Directory permissions
+chmod 755   # Directory permissions
 ```
 
 ### ✅ Environment Variables
