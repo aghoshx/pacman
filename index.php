@@ -177,7 +177,7 @@
     <script>
       // Mobile detection and popup functionality
       function isMobileDevice() {
-        return window.innerWidth <= 768 || window.innerHeight <= 1024;
+        return window.innerWidth <= 768;
       }
 
       function showMobilePopup() {

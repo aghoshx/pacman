@@ -424,7 +424,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: clamp(12px, 1.01137vw, 18px);
+  font-size: 1.01137vw;
 }
 
 /* Layout styles for page-left, center content, and page-right with leaderboard */
@@ -522,7 +522,7 @@ body {
   box-shadow: 1px 1px #ee2a29;
 }
 .page-left .how-to-win h2 {
-  font-size: 1.2rem;
+  font-size: 0.875rem;
   color: #000000;
   line-height: 1.8;
   margin: 0;
@@ -534,7 +534,7 @@ body {
   margin-bottom: 1.25rem;
 }
 .page-left .unlock-rewards h4 {
-  font-size: 1.2rem;
+  font-size: 0.875rem;
   margin-top: 0.625rem;
   margin-bottom: 0;
 }
@@ -555,13 +555,13 @@ body {
   display: inline-block;
 }
 .page-left .tooltip-trigger {
-  cursor: pointer;
-  display: inline-flex; /* keeps image and text inline with tight wrap */
-  align-items: center;
   gap: 0.25rem; /* space between text and image */
-  border-radius: 0.25rem;
+  cursor: pointer;
   font-weight: bold;
-  font-size: 0.9375rem;
+  align-items: center;
+  font-size: 0.875rem;
+  display: inline-flex; /* keeps image and text inline with tight wrap */
+  border-radius: 0.25rem;
 }
 .page-left .tooltip-content {
   left: 0px;
@@ -724,7 +724,6 @@ body {
 /* Responsive design for smaller screens */
 @media only screen and (max-width: 75rem) {
   .page-left {
-    width: 9.375rem;
     padding: 0.9375rem;
   }
   .page-left .brand-logo .brand-logo-icon {
@@ -734,7 +733,6 @@ body {
     font-size: 1rem;
   }
   .page-right {
-    width: 15.625rem;
     padding: 0.9375rem;
   }
 }

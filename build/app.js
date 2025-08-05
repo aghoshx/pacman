@@ -143,11 +143,11 @@ class Leaderboard {
   constructor(apiUrl = null) {
     // Use config system for settings
     const config = window.GAME_CONFIG || { API_URL: "./api", MAX_LEADERBOARD_ENTRIES: 10 };
-    
+
     this.maxEntries = config.MAX_LEADERBOARD_ENTRIES;
     this.apiUrl = apiUrl || config.API_URL;
     this.scores = [];
-    
+
     // Load scores from database on initialization
     this.loadScores();
   }
@@ -225,17 +225,21 @@ class Leaderboard {
    * @returns {Object} Result object with position and whether it made the leaderboard
    */
   async addScore(score, playerName = "Anonymous", level = 1, email = null, phone = null) {
+    if (window.submitLock === true) {
+      return;
+    }
+    window.submitLock = true;
     const payload = {
       player_name: playerName.trim() || "Anonymous",
       score: score,
       level: level,
     };
-    
+
     // Add email and phone if provided
     if (email && email.trim()) {
       payload.email = email.trim();
     }
-    
+
     if (phone && phone.trim()) {
       payload.phone = phone.trim();
     }
@@ -254,6 +258,7 @@ class Leaderboard {
       const result = await res.json();
 
       if (result.success) {
+        window.submitLock = false;
         // Optionally reload scores after submission
         await this.loadScores();
 
@@ -264,6 +269,7 @@ class Leaderboard {
           result: result.data,
         };
       } else {
+        window.submitLock = false;
         throw new Error(result.error || "Failed to submit score");
       }
     } catch (error) {
@@ -312,19 +318,19 @@ class Leaderboard {
   calculatePosition(score) {
     // Create a temporary array with the new score
     const tempScores = [...this.scores];
-    tempScores.push({ score: score, player_name: 'TEMP' });
-    
+    tempScores.push({ score: score, player_name: "TEMP" });
+
     // Sort by score (descending)
     tempScores.sort((a, b) => b.score - a.score);
-    
+
     // Find the position of our temporary score
-    const position = tempScores.findIndex(s => s.player_name === 'TEMP') + 1;
+    const position = tempScores.findIndex((s) => s.player_name === "TEMP") + 1;
     const madeLeaderboard = position <= this.maxEntries;
-    
+
     return {
       position: position,
       madeLeaderboard: madeLeaderboard,
-      isNewRecord: this.scores.length === 0 || score > this.scores[0].score
+      isNewRecord: this.scores.length === 0 || score > this.scores[0].score,
     };
   }
 
@@ -344,7 +350,7 @@ class Leaderboard {
   saveScores() {
     // No-op: Scores are automatically saved to database via API calls
     // This method exists only for backward compatibility
-    console.log('saveScores() called - scores are now automatically saved via API');
+    console.log("saveScores() called - scores are now automatically saved via API");
   }
 
   /**
@@ -415,11 +421,7 @@ class Leaderboard {
    */
   formatDate(dateString) {
     const date = new Date(dateString);
-    return (
-      date.toLocaleDateString() +
-      " " +
-      date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })
-    );
+    return date.toLocaleDateString() + " " + date.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
   }
 }
 

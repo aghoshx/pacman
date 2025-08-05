@@ -6,7 +6,7 @@
 
 html {
   scroll-behavior: smooth;
-  font-size: clamp(12px, 1.01137vw, 18px);
+  font-size: 1.01137vw;
 }
 /* Layout styles for page-left, center content, and page-right with leaderboard */
 
@@ -116,7 +116,7 @@ body {
     }
   }
   .how-to-win h2 {
-    font-size: 1.2rem;
+    font-size: ptr(14px);
     color: #000000;
     line-height: 1.8;
     margin: 0;
@@ -128,7 +128,7 @@ body {
     margin-bottom: ptr(20px);
   }
   .unlock-rewards h4 {
-    font-size: 1.2rem;
+    font-size: ptr(14px);
     margin-top: ptr(10px);
     margin-bottom: 0;
   }
@@ -152,13 +152,13 @@ body {
   }
 
   .tooltip-trigger {
-    cursor: pointer;
-    display: inline-flex; /* keeps image and text inline with tight wrap */
-    align-items: center;
     gap: ptr(4px); /* space between text and image */
-    border-radius: ptr(4px);
+    cursor: pointer;
     font-weight: bold;
-    font-size: ptr(15px);
+    align-items: center;
+    font-size: ptr(14px);
+    display: inline-flex; /* keeps image and text inline with tight wrap */
+    border-radius: ptr(4px);
   }
   .tooltip-content {
     left: 0px;
@@ -341,7 +341,6 @@ body {
 /* Responsive design for smaller screens */
 @media only screen and (max-width: ptr(1200px)) {
   .page-left {
-    width: ptr(150px);
     padding: ptr(15px);
 
     .brand-logo {
@@ -356,7 +355,6 @@ body {
   }
 
   .page-right {
-    width: ptr(250px);
     padding: ptr(15px);
   }
 }
