@@ -3,26 +3,27 @@
 
 <head>
   <!-- Global site tag (gtag.js) - Google Analytics -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=UA-142539004-1"></script>
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-2MFRWGS89E"></script>
   <script>
     window.dataLayer = window.dataLayer || [];
-    function gtag() {
-      dataLayer.push(arguments);
-    }
-    gtag("js", new Date());
+    function gtag() { dataLayer.push(arguments); }
+    gtag('js', new Date());
 
-    gtag("config", "UA-142539004-1");
+    gtag('config', 'G-2MFRWGS89E');
   </script>
+
 
   <script src="build/app.js?v=<?php echo time(); ?>"></script>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet" />
   <script src="https://www.google.com/recaptcha/api.js" async defer></script>
-  <title>Pacman</title>
-  <meta name="author" content="Brent Ward" />
-  <meta name="description" content="The classic arcade game Pac-Man! Remade in Javascript by Brent Ward" />
-  <meta name="keywords" content="Pac-Man, games, retro, arcade" />
+  <link rel="stylesheet" href="build/app.css?v=<?php echo time(); ?>">
+  <title>Botman | The AI Maze | Play. Score. Win your pass to Caravan ’25.</title>
+  <meta name="author" content="Team Matsio" />
+  <meta name="description" content="Play the Bot-Man game from 11 to 26 August 2025 to enter the top 10 leaderboard. Keep playing to hold your position." />
+  <meta name="keywords" content="AI Botman Maze, games, retro, arcade" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
 </head>
 
@@ -39,7 +40,8 @@
     <!-- New content block starts here -->
     <div class="how-to-win">
       <h2>How to Win</h2>
-      <p>Play the Caravan ‘25 edition of our Pac-Man game from [date range], to enter the top 10 leaderboard.</p>
+      <p>Play the Bot-Man game from <strong>11 to 26 August 2025</strong> to enter the top 10 leaderboard. Keep playing
+        to hold your position.</p>
 
       <div class="unlock-rewards">
         <h4>Unlock!</h4>
@@ -50,18 +52,13 @@
           <li>🏅 <strong>Rank 4 to 10</strong> → Exclusive Caravan '25 merch</li>
         </ul>
       </div>
-
-      <p class="note">Valid only for members of the SaaSBoomi Compass community and curated applicants with a valid payment link.</p>
-      <div class="eligibility-check">
-        <span class="tooltip-trigger">Check Eligibility <img id="" class="question" src="app/style/graphics/question.png" alt="question" /></span>
-        <div class="tooltip-content">
-          <p>
-            You must be a SaaSBoomi Compass member or have passed Caravan curation. <a target="_blank" href="https://compass.saasboomi.org/">Not a member? Join here.</a> Winners will be
-            contacted
-            via email. If a winner is not eligible, the next top scorer will take their place.
-          </p>
-        </div>
-      </div>
+      <h2>How to Play
+      </h2>
+      <p>* Tap the arrow keys to move Bot-Man in the desired direction.<br />
+        * Gobble the dots to rack up points.<br />
+        * Avoid the ghosts hunting you down.<br />
+        * Eat the larger dots to gain a limited-time power that lets you catch ghosts for extra points.<br />
+        * Make sure to submit your score when you finish.</p>
     </div>
   </div>
   <div id="overflow-mask" class="overflow-mask">
@@ -71,14 +68,13 @@
     <div id="preload-div" class="preload-div"></div>
 
     <div id="main-menu-container" class="main-menu-container">
-      <img id="logo" class="logo" src="app/style/graphics/pacman_logo.png" alt="Pacman Logo" />
+      <img id="logo" class="logo" src="app/style/graphics/bot-man.png" alt="Pacman Logo" />
       <div class="sub-heading">
         <h2 style="color: black">THE AI MAZE</h2>
-        <h3 style="color: black">Play. Score. Win your pass to Caravan ’25</h3>
+        <h3 style="color: black">Play. Score. Win your pass to Caravan ’25.</h3>
       </div>
       <button id="game-start" class="game-start">PLAY</button>
     </div>
-
     <div class="header-buttons">
       <div></div>
       <span>
@@ -148,20 +144,6 @@
       <div class="loading-dot _90"></div>
       <div class="loading-dot _95"></div>
     </div>
-    <!--
-      <div id='error-message' class='error-message'>
-        <div class='header'>
-          <div>OOPS!</div>
-          <div class='error-pacman'></div>
-        </div>
-        <div class='body'>
-          We were unable to load the images/sounds needed to play the game.</br></br>
-
-          This could be due to a poor connection, a strict network policy, or
-          by playing on an unsupported browser.
-        </div>
-      </div> -->
-
     <!-- Mobile Desktop Suggestion Popup -->
     <div id="mobile-desktop-popup" class="mobile-desktop-popup">
       <div class="mobile-popup-content">
@@ -217,7 +199,8 @@
       <div class="terms-and-conditions">
         <h3>Terms and Conditions:</h3>
         <ul>
-          <li>You must be a Compass member or have passed Caravan curation with a valid payment link.</li>
+          <li>You must be a SaaSBoomi Compass member or have passed Caravan ’25 curation with a valid payment link. Not
+            a member? Join here.</li>
           <li>Winners will be contacted via email.</li>
           <li>If a winner is not eligible, the next top scorer will take their place.</li>
         </ul>

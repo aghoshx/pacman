@@ -36,7 +36,7 @@ body {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: flex-start;
   @media (max-height: 659px) {
     justify-content: flex-start;
   }
@@ -144,6 +144,7 @@ body {
     color: #555;
     line-height: 1.8;
     margin: ptr(20px) 0;
+    letter-spacing: -1px;
   }
 
   .eligibility-check {
@@ -254,7 +255,11 @@ body {
       &.first-place {
         padding-left: ptr(6px);
         border-left: ptr(4px) solid #fcc73f;
-        background: linear-gradient(90deg, rgba(252, 199, 63, 0.2) 0%, rgba(252, 199, 63, 0) 100%);
+        background: linear-gradient(
+          90deg,
+          rgba(252, 199, 63, 0.2) 0%,
+          rgba(252, 199, 63, 0) 100%
+        );
 
         .rank {
           color: #ee2a29;

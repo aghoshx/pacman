@@ -7,3 +7,5 @@ api/.env
 *.log
 *.yaml
 /vendor
+package-lock.json
+package.json

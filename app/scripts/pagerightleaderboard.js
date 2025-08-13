@@ -95,8 +95,8 @@ class PageRightLeaderboardUI {
           <h3>Terms and Conditions:</h3>
           <ul>
             <li>
-              You must be a Compass member or have passed Caravan curation with
-              a valid payment link.
+              You must be a SaaSBoomi Compass member or have passed Caravan ’25 curation with a valid payment link. Not a member? <a target="_blank" href="https://compass.saasboomi.org/" style="color: #ffdf00;">Join here.</a>
+
             </li>
             <li>Winners will be contacted via email.</li>
             <li>
@@ -327,7 +327,7 @@ class PageRightLeaderboardUI {
   async startAutoRefresh() {
     // Get config for refresh settings
     const config = window.GAME_CONFIG || {
-      AUTO_REFRESH_ENABLED: true, 
+      AUTO_REFRESH_ENABLED: true,
       REFRESH_INTERVAL_MS: 30000,
     };
 
@@ -436,11 +436,12 @@ class PageRightLeaderboardUI {
         positionElement.textContent = `New #${positionInfo.position} high score!`;
       }
     } else {
-      positionElement.textContent = `Your score: ${this.leaderboard.formatScore(score)} points!`;
+      positionElement.textContent = `Your score: ${this.leaderboard.formatScore(
+        score
+      )} points!`;
     }
-    positionElement.classList.remove('game-element-hidden');
-    positionElement.classList.add('game-element-visible');
-
+    positionElement.classList.remove("game-element-hidden");
+    positionElement.classList.add("game-element-visible");
 
     this.nameInputModal.style.display = "flex";
     // Note: opacity and transform are kept as inline styles since they're part of animation sequence
@@ -489,24 +490,36 @@ class PageRightLeaderboardUI {
 
     // Validate required fields - name, email, and phone are now required for all submissions
     if (!playerName || playerName === "Anonymous") {
-      this.showValidationError("player-name", "Name is required for score submission!");
+      this.showValidationError(
+        "player-name",
+        "Name is required for score submission!"
+      );
       return;
     }
 
     if (!email) {
-      this.showValidationError("player-email", "Email is required for score submission!");
+      this.showValidationError(
+        "player-email",
+        "Email is required for score submission!"
+      );
       return;
     }
 
     if (!phone) {
-      this.showValidationError("player-phone", "Phone number is required for score submission!");
+      this.showValidationError(
+        "player-phone",
+        "Phone number is required for score submission!"
+      );
       return;
     }
 
     // Email validation
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     if (!emailRegex.test(email)) {
-      this.showValidationError("player-email", "Please enter a valid email address!");
+      this.showValidationError(
+        "player-email",
+        "Please enter a valid email address!"
+      );
       return;
     }
 
@@ -616,29 +629,33 @@ class PageRightLeaderboardUI {
     if (!inputElement) return;
 
     // Remove any existing error message for this input
-    const existingError = inputElement.parentNode.querySelector('.validation-error');
+    const existingError =
+      inputElement.parentNode.querySelector(".validation-error");
     if (existingError) {
       existingError.remove();
     }
 
     // Create error message element
-    const errorElement = document.createElement('div');
-    errorElement.className = 'validation-error';
+    const errorElement = document.createElement("div");
+    errorElement.className = "validation-error";
     errorElement.style.cssText = `
       color: #ff4444;
-      font-size: 12px;
-      margin-top: 5px;
+      font-size: 0.75rem;
+      margin-bottom: 0.9375rem;
       font-family: 'Courier New', monospace;
       text-align: center;
     `;
     errorElement.textContent = message;
 
     // Add error styling to input
-    inputElement.style.borderColor = '#ff4444';
-    inputElement.style.boxShadow = '0 0 5px rgba(255, 68, 68, 0.5)';
+    inputElement.style.borderColor = "#ff4444";
+    inputElement.style.boxShadow = "0 0 5px rgba(255, 68, 68, 0.5)";
 
     // Insert error message after the input
-    inputElement.parentNode.insertBefore(errorElement, inputElement.nextSibling);
+    inputElement.parentNode.insertBefore(
+      errorElement,
+      inputElement.nextSibling
+    );
 
     // Focus on the input
     inputElement.focus();
@@ -649,16 +666,16 @@ class PageRightLeaderboardUI {
    */
   clearValidationErrors() {
     // Remove all error messages
-    const errorMessages = document.querySelectorAll('.validation-error');
-    errorMessages.forEach(error => error.remove());
+    const errorMessages = document.querySelectorAll(".validation-error");
+    errorMessages.forEach((error) => error.remove());
 
     // Reset input styling
-    const inputs = ['player-name', 'player-email', 'player-phone'];
-    inputs.forEach(inputId => {
+    const inputs = ["player-name", "player-email", "player-phone"];
+    inputs.forEach((inputId) => {
       const input = document.getElementById(inputId);
       if (input) {
-        input.style.borderColor = '#2121ff';
-        input.style.boxShadow = '';
+        input.style.borderColor = "#2121ff";
+        input.style.boxShadow = "";
       }
     });
   }
@@ -671,14 +688,15 @@ class PageRightLeaderboardUI {
     if (!inputElement) return;
 
     // Remove existing error message for this input
-    const existingError = inputElement.parentNode.querySelector('.validation-error');
+    const existingError =
+      inputElement.parentNode.querySelector(".validation-error");
     if (existingError) {
       existingError.remove();
     }
 
     // Reset input styling
-    inputElement.style.borderColor = '#2121ff';
-    inputElement.style.boxShadow = '';
+    inputElement.style.borderColor = "#2121ff";
+    inputElement.style.boxShadow = "";
   }
 
   /**
