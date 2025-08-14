@@ -45,8 +45,9 @@ class ProductionGoogleSheetsAPI
             }
         }
 
-        $this->spreadsheetId = '196hFMyXpn2Nqw6_XyS2Fzho1dwC7ONshiqcPG0MeP9E';
-        $this->sheetName = $_ENV['SHEET_NAME'] ?? 'Sheet1';
+        $this->spreadsheetId = $_ENV['GOOGLE_SHEETS_ID'] ?? '196hFMyXpn2Nqw6_XyS2Fzho1dwC7ONshiqcPG0MeP9E';
+        $this->sheetName = $_ENV['SHEET_NAME'] ?? 'AllScores';
+        
 
         $this->rateLimiter = [
             'ip' => $_SERVER['REMOTE_ADDR'] ?? '127.0.0.1',
@@ -70,8 +71,7 @@ class ProductionGoogleSheetsAPI
             $client->setAuthConfig($credentialsPath);
             $client->addScope(Google_Service_Sheets::SPREADSHEETS);
 
-            // Use service account authentication
-            $client->useApplicationDefaultCredentials();
+            // Use service account authentication (don't call useApplicationDefaultCredentials when using setAuthConfig)
 
             $this->service = new Google_Service_Sheets($client);
 
@@ -279,6 +279,8 @@ class ProductionGoogleSheetsAPI
 
             // Get all data from the sheet
             $range = $this->sheetName . '!A:H';
+            
+            
             $response = $this->service->spreadsheets_values->get($this->spreadsheetId, $range);
             $values = $response->getValues();
 
@@ -319,7 +321,8 @@ class ProductionGoogleSheetsAPI
 
         } catch (Exception $e) {
             error_log("Leaderboard retrieval error: " . $e->getMessage());
-            $this->sendError('Failed to retrieve leaderboard', 500);
+            error_log("Error details: " . $e->getTraceAsString());
+            $this->sendError('Failed to retrieve leaderboard: ' . $e->getMessage(), 500);
         }
     }
 
