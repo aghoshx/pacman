@@ -13,7 +13,8 @@ class Leaderboard {
 
   async loadScores() {
     try {
-      const res = await fetch(`${this.apiUrl}/leaderboard`);
+      const res = await fetch(`${this.apiUrl}/leaderboard?ts=${Date.now()}`);
+
       if (!res.ok) throw new Error("Failed to fetch leaderboard");
       const response = await res.json();
       this.scores = response.success ? response.data : [];
@@ -29,7 +30,7 @@ class Leaderboard {
    */
   async getTopPlayer() {
     try {
-      const response = await fetch(`${this.apiUrl}/top-player`);
+      const response = await fetch(`${this.apiUrl}/top-player?ts=${Date.now()}`);
       const data = await response.json();
 
       if (data.success) {
@@ -112,7 +113,7 @@ class Leaderboard {
         },
         body: JSON.stringify(payload),
       });
-      
+
       console.log("Response status:", res.status);
       console.log("Response headers:", [...res.headers.entries()]);
 
