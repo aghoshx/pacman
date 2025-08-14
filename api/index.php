@@ -39,6 +39,9 @@ class APIRouter {
     private $apiFile = 'sheets-api.php';
     
     public function __construct() {
+        // Set the API file path relative to the main router
+        $this->apiFile = __DIR__ . '/sheets-api.php';
+        
         // Security check - ensure API file exists and is not directly accessible
         if (!file_exists($this->apiFile)) {
             $this->sendError('API service unavailable', 503);
