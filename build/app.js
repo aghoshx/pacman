@@ -246,15 +246,19 @@ class Leaderboard {
     if (phone && phone.trim()) {
       payload.phone = phone.trim();
     }
-
+    console.log("Submitting score:", payload);
+    console.log("API URL:", `${this.apiUrl}/submit/`);
     try {
-      const res = await fetch(`${this.apiUrl}/submit`, {
+      const res = await fetch(`${this.apiUrl}/submit/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(payload),
       });
+      
+      console.log("Response status:", res.status);
+      console.log("Response headers:", [...res.headers.entries()]);
 
       if (!res.ok) throw new Error("Failed to submit score");
 
