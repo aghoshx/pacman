@@ -14,6 +14,7 @@
   </script>
 
 
+  <script src="game-config.js?v=<?php echo time(); ?>"></script>
   <script src="build/app.js?v=<?php echo time(); ?>"></script>
   <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
   <link href="https://fonts.googleapis.com/css?family=Press+Start+2P&display=swap" rel="stylesheet" />
