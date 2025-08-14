@@ -60,6 +60,9 @@ class GameConfig {
     } else if (hostname.includes('stg-saasboomiorg-staging.kinsta.cloud')) {
       // Staging environment
       return './api';
+    } else if (hostname === 'dev.matsio.com') {
+      // Development environment
+      return './api';
     } else if (hostname === 'saasboomi.org') {
       // Production environment
       return './api';

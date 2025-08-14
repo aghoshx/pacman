@@ -423,11 +423,15 @@
 }
 
 html {
-  scroll-behavior: smooth;
   font-size: 1.01137vw;
+  scroll-behavior: smooth;
+}
+@media (max-width: 768px) {
+  html {
+    font-size: 16px;
+  }
 }
 
-/* Layout styles for page-left, center content, and page-right with leaderboard */
 body {
   margin: 0;
   height: 100vh;
@@ -438,17 +442,17 @@ body {
 
 .page-left {
   width: 100%;
-  max-height: 100vh;
-  max-width: 18.75rem;
-  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
-  border-right: 0.1875rem solid #fcc73f;
-  padding: 1.25rem;
-  box-shadow: 0.3125rem 0 1.25rem rgba(252, 199, 63, 0.2);
-  overflow-y: auto;
-  position: relative;
   display: flex;
+  overflow-y: auto;
+  max-height: 100vh;
+  padding: 1.25rem;
+  position: relative;
+  max-width: 18.75rem;
   flex-direction: column;
   justify-content: flex-start;
+  border-right: 0.1875rem solid #fcc73f;
+  box-shadow: 0.3125rem 0 1.25rem rgba(252, 199, 63, 0.2);
+  background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 50%, #e1e8ed 100%);
   /* Brand Logo Section */
   /* Brand Content */
 }
@@ -465,23 +469,23 @@ body {
   max-width: 100%;
 }
 .page-left .brand-logo .brand-logo-icon {
+  display: block;
   font-size: 4rem;
   margin-bottom: 0.9375rem;
-  display: block;
   filter: drop-shadow(0.1875rem 0.1875rem 0.375rem rgba(0, 0, 0, 0.1));
 }
 .page-left .brand-logo .brand-title {
-  font-size: 1.2rem;
-  color: #231f20;
   margin: 0;
+  color: #231f20;
   line-height: 1.4;
-  text-shadow: 2px 2px 0.25rem rgba(0, 0, 0, 0.1);
+  font-size: 1.2rem;
+  text-shadow: 0.125rem 0.125rem 0.25rem rgba(0, 0, 0, 0.1);
 }
 .page-left .brand-logo .brand-subtitle {
-  font-size: 0.7rem;
   color: #666;
-  margin: 0.9375rem 0;
   line-height: 1.6;
+  font-size: 0.7rem;
+  margin: 0.9375rem 0;
 }
 .page-left .brand-content {
   display: flex;
@@ -491,27 +495,27 @@ body {
   /* CTA Button */
 }
 .page-left .brand-content .brand-description {
-  font-size: 0.6rem;
   color: #555;
   line-height: 1.8;
-  margin: 1.25rem 0;
+  font-size: 0.6rem;
   text-align: center;
+  margin: 1.25rem 0;
 }
 .page-left .brand-content .cta-button {
-  background-color: #fcc73f;
-  border: 0.1875rem solid #231f20;
-  border-radius: 0.5rem;
   color: #231f20;
   cursor: pointer;
   font-size: 0.8rem;
   font-weight: bold;
-  padding: 0.9375rem 1.25rem;
-  text-decoration: none;
   text-align: center;
-  transition: all 0.2s ease;
-  box-shadow: 0.1875rem 0.1875rem #ee2a29;
-  display: inline-block;
+  text-decoration: none;
   margin-top: 1.25rem;
+  display: inline-block;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  background-color: #fcc73f;
+  padding: 0.9375rem 1.25rem;
+  border: 0.1875rem solid #231f20;
+  box-shadow: 0.1875rem 0.1875rem #ee2a29;
 }
 .page-left .brand-content .cta-button:hover {
   transform: translateY(-2px);
@@ -522,46 +526,46 @@ body {
   box-shadow: 1px 1px #ee2a29;
 }
 .page-left .how-to-win h2 {
-  font-size: 0.875rem;
+  margin: 0;
   color: #000000;
   line-height: 1.8;
-  margin: 0;
+  font-size: 0.875rem;
 }
 .page-left .how-to-win p {
-  font-size: 0.625rem;
   color: #555;
   line-height: 1.8;
+  font-size: 0.625rem;
   margin-bottom: 1.25rem;
 }
 .page-left .unlock-rewards h4 {
+  margin-bottom: 0;
   font-size: 0.875rem;
   margin-top: 0.625rem;
-  margin-bottom: 0;
 }
 .page-left .unlock-rewards ul {
-  list-style: none;
-  padding-left: 0;
   margin-top: 0;
+  padding-left: 0;
+  list-style: none;
 }
 .page-left .unlock-rewards li {
-  margin-bottom: 0.3rem;
-  font-size: 0.6rem;
   color: #555;
   line-height: 1.8;
+  font-size: 0.6rem;
   margin: 1.25rem 0;
   letter-spacing: -1px;
+  margin-bottom: 0.3rem;
 }
 .page-left .eligibility-check {
   position: relative;
   display: inline-block;
 }
 .page-left .tooltip-trigger {
-  gap: 0.25rem; /* space between text and image */
+  gap: 0.25rem;
   cursor: pointer;
   font-weight: bold;
   align-items: center;
   font-size: 0.875rem;
-  display: inline-flex; /* keeps image and text inline with tight wrap */
+  display: inline-flex;
   border-radius: 0.25rem;
 }
 .page-left .tooltip-content {

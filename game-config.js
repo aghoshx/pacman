@@ -37,6 +37,8 @@ const getEnvironment = () => {
     return 'development';
   } else if (hostname.includes('stg-saasboomiorg-staging.kinsta.cloud')) {
     return 'staging';
+  } else if (hostname === 'dev.matsio.com') {
+    return 'development';
   } else if (hostname === 'saasboomi.org') {
     return 'production';
   }
