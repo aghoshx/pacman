@@ -1,7 +1,5 @@
 <?php
-// Set the action parameter for the main API
+// Set the action parameter and route to main API
 $_GET['action'] = 'leaderboard';
-
-// Route to the main API handler
-require_once __DIR__ . '/../../../pacman/api/index.php';
+require_once '../index.php';
 ?>

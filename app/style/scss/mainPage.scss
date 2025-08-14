@@ -847,3 +847,150 @@ body {
     text-shadow: 0 0 ptr(20px) #fcc73f, 0 0 ptr(30px) #fcc73f;
   }
 }
+
+/* Mobile Controls - Retro Console Style */
+.mobile-controls {
+  display: none;
+  position: fixed;
+  bottom: ptr(20px);
+  right: ptr(20px);
+  z-index: 1500;
+  touch-action: manipulation;
+
+  &.show {
+    display: block;
+  }
+}
+
+.mobile-controls-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: ptr(4px);
+  padding: ptr(12px);
+  background: linear-gradient(145deg, #2a2a2a, #1a1a1a);
+  border: ptr(3px) solid #333;
+  border-radius: ptr(12px);
+  box-shadow: 
+    inset ptr(2px) ptr(2px) ptr(4px) rgba(255, 255, 255, 0.1),
+    inset ptr(-2px) ptr(-2px) ptr(4px) rgba(0, 0, 0, 0.5),
+    ptr(4px) ptr(4px) ptr(12px) rgba(0, 0, 0, 0.6);
+}
+
+.mobile-horizontal-controls {
+  display: flex;
+  gap: ptr(4px);
+}
+
+.mobile-control-btn {
+  // Retro console button base
+  background: linear-gradient(145deg, #4a4a4a, #2a2a2a);
+  border: ptr(2px) solid #666;
+  border-radius: ptr(6px);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  touch-action: manipulation;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: ptr(48px);
+  height: ptr(48px);
+  position: relative;
+  
+  // Retro button styling with beveled edges
+  box-shadow: 
+    inset ptr(1px) ptr(1px) ptr(2px) rgba(255, 255, 255, 0.2),
+    inset ptr(-1px) ptr(-1px) ptr(2px) rgba(0, 0, 0, 0.5),
+    ptr(2px) ptr(2px) ptr(4px) rgba(0, 0, 0, 0.3);
+
+  // Pacman game colors accent
+  &::before {
+    content: '';
+    position: absolute;
+    inset: ptr(2px);
+    border-radius: ptr(3px);
+    background: linear-gradient(145deg, #3a3a3a, #2a2a2a);
+    border: ptr(1px) solid #fcc73f;
+  }
+
+  img {
+    width: ptr(24px);
+    height: ptr(24px);
+    filter: brightness(1.2) contrast(1.2);
+    position: relative;
+    z-index: 1;
+    transition: all 0.15s ease;
+  }
+
+  // Hover state - slight glow
+  &:hover {
+    border-color: #fcc73f;
+    box-shadow: 
+      inset ptr(1px) ptr(1px) ptr(2px) rgba(255, 255, 255, 0.3),
+      inset ptr(-1px) ptr(-1px) ptr(2px) rgba(0, 0, 0, 0.5),
+      ptr(2px) ptr(2px) ptr(4px) rgba(0, 0, 0, 0.3),
+      0 0 ptr(8px) rgba(252, 199, 63, 0.3);
+    
+    &::before {
+      border-color: #ffdf00;
+      background: linear-gradient(145deg, #404040, #303030);
+    }
+    
+    img {
+      filter: brightness(1.4) contrast(1.3);
+    }
+  }
+
+  // Active/Pressed state - retro button press feel
+  &:active, &.pressed {
+    transform: translateY(ptr(1px));
+    background: linear-gradient(145deg, #2a2a2a, #3a3a3a);
+    box-shadow: 
+      inset ptr(2px) ptr(2px) ptr(4px) rgba(0, 0, 0, 0.6),
+      inset ptr(-1px) ptr(-1px) ptr(2px) rgba(255, 255, 255, 0.1),
+      ptr(1px) ptr(1px) ptr(2px) rgba(0, 0, 0, 0.4);
+    
+    &::before {
+      background: linear-gradient(145deg, #252525, #353535);
+      border-color: #ee2a29;
+      box-shadow: inset ptr(1px) ptr(1px) ptr(3px) rgba(0, 0, 0, 0.4);
+    }
+    
+    img {
+      filter: brightness(0.9) contrast(1.1);
+      transform: scale(0.95);
+    }
+  }
+
+  // Special styling for directional buttons
+  &.mobile-up {
+    margin-bottom: ptr(2px);
+  }
+  
+  &.mobile-down {
+    margin-top: ptr(2px);
+  }
+}
+
+// Add a subtle retro scanline effect
+.mobile-controls-container::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent ptr(2px),
+    rgba(255, 255, 255, 0.03) ptr(2px),
+    rgba(255, 255, 255, 0.03) ptr(3px)
+  );
+  border-radius: ptr(12px);
+  pointer-events: none;
+}
+
+/* Hide mobile controls on desktop */
+@media only screen and (min-width: ptr(769px)) {
+  .mobile-controls {
+    display: none !important;
+  }
+}

@@ -156,6 +156,26 @@
       </div>
     </div>
 
+    <!-- Mobile Arrow Controls -->
+    <div id="mobile-controls" class="mobile-controls">
+      <div class="mobile-controls-container">
+        <button id="mobile-up" class="mobile-control-btn mobile-up" aria-label="Move Up">
+          <img src="app/style/graphics/spriteSheets/characters/pacman/arrow_up.svg" alt="Up" />
+        </button>
+        <div class="mobile-horizontal-controls">
+          <button id="mobile-left" class="mobile-control-btn mobile-left" aria-label="Move Left">
+            <img src="app/style/graphics/spriteSheets/characters/pacman/arrow_left.svg" alt="Left" />
+          </button>
+          <button id="mobile-right" class="mobile-control-btn mobile-right" aria-label="Move Right">
+            <img src="app/style/graphics/spriteSheets/characters/pacman/arrow_right.svg" alt="Right" />
+          </button>
+        </div>
+        <button id="mobile-down" class="mobile-control-btn mobile-down" aria-label="Move Down">
+          <img src="app/style/graphics/spriteSheets/characters/pacman/arrow_down.svg" alt="Down" />
+        </button>
+      </div>
+    </div>
+
     <script>
       // Mobile detection and popup functionality
       function isMobileDevice() {
@@ -183,13 +203,136 @@
         }
       }
 
+      // Mobile controls functionality
+      function initializeMobileControls() {
+        const mobileControls = document.getElementById("mobile-controls");
+        const upBtn = document.getElementById("mobile-up");
+        const downBtn = document.getElementById("mobile-down");
+        const leftBtn = document.getElementById("mobile-left");
+        const rightBtn = document.getElementById("mobile-right");
+
+        // Show mobile controls on mobile devices
+        if (isMobileDevice()) {
+          mobileControls.classList.add("show");
+        }
+
+        // Prevent multiple rapid fires
+        let lastTouchTime = 0;
+        const touchCooldown = 150; // 150ms cooldown between touches
+
+        function handleDirectionInput(direction) {
+          const now = Date.now();
+          if (now - lastTouchTime < touchCooldown) {
+            return; // Ignore rapid touches
+          }
+          lastTouchTime = now;
+
+          // Dispatch keydown event instead of swipe for more direct control
+          const keyCode = {
+            'up': 38,    // Arrow up
+            'down': 40,  // Arrow down  
+            'left': 37,  // Arrow left
+            'right': 39  // Arrow right
+          }[direction];
+
+          if (keyCode) {
+            window.dispatchEvent(new KeyboardEvent('keydown', {
+              keyCode: keyCode,
+              which: keyCode,
+              bubbles: true
+            }));
+          }
+        }
+
+        // Add visual press feedback
+        function addPressedClass(btn) {
+          btn.classList.add('pressed');
+          setTimeout(() => btn.classList.remove('pressed'), 200);
+        }
+
+        // Use touchend instead of touchstart to prevent stuck keys
+        upBtn.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          addPressedClass(upBtn);
+          handleDirectionInput('up');
+        });
+
+        downBtn.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          addPressedClass(downBtn);
+          handleDirectionInput('down');
+        });
+
+        leftBtn.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          addPressedClass(leftBtn);
+          handleDirectionInput('left');
+        });
+
+        rightBtn.addEventListener("touchend", (e) => {
+          e.preventDefault();
+          e.stopPropagation();
+          addPressedClass(rightBtn);
+          handleDirectionInput('right');
+        });
+
+        // Add pressed class on touchstart for immediate visual feedback
+        [upBtn, downBtn, leftBtn, rightBtn].forEach(btn => {
+          btn.addEventListener("touchstart", (e) => {
+            e.preventDefault();
+            btn.classList.add('pressed');
+          });
+          
+          // Remove pressed class on touchend/touchcancel to clean up
+          btn.addEventListener("touchcancel", (e) => {
+            btn.classList.remove('pressed');
+          });
+        });
+
+        // Click events as fallback for testing on desktop
+        upBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addPressedClass(upBtn);
+          handleDirectionInput('up');
+        });
+
+        downBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addPressedClass(downBtn);
+          handleDirectionInput('down');
+        });
+
+        leftBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addPressedClass(leftBtn);
+          handleDirectionInput('left');
+        });
+
+        rightBtn.addEventListener("click", (e) => {
+          e.preventDefault();
+          addPressedClass(rightBtn);
+          handleDirectionInput('right');
+        });
+      }
+
       window.onload = () => {
         let gameCoordinator = new GameCoordinator();
         showMobilePopup();
+        initializeMobileControls();
 
         // Handle window resize events
         window.addEventListener('resize', () => {
           showMobilePopup();
+          // Show/hide mobile controls based on device
+          const mobileControls = document.getElementById("mobile-controls");
+          if (isMobileDevice()) {
+            mobileControls.classList.add("show");
+          } else {
+            mobileControls.classList.remove("show");
+          }
         });
       };
     </script>
